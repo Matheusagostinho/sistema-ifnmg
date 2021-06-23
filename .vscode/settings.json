@@ -1,0 +1,59 @@
+{
+  "workbench.colorTheme": "Dracula",
+  "workbench.iconTheme": "material-icon-theme",
+  "explorer.confirmDelete": false,
+
+  "emmet.syntaxProfiles": { "javascript": "jsx" },
+  "emmet.includeLanguages": { "javascript": "javascriptreact" },
+
+  "explorer.confirmDragAndDrop": false,
+  "git.ignoreWindowsGit27Warning": true,
+  "window.zoomLevel": 0,
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  "files.associations": {
+    "*.js": "javascriptreact"
+  },
+
+  "[javascript]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    }
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    }
+  },
+  "[typescript]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    }
+  },
+  "[typescriptreact]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    }
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "workbench.editor.labelFormat": "short",
+  "editor.fontLigatures": true,
+  "editor.fontFamily": "Fira Code",
+
+  "explorer.compactFolders": false,
+  "sync.autoUpload": true,
+  "sync.autoDownload": true,
+  "sync.quietSync": true,
+  "sync.gist": "b2e594dc68da783814e1583264f83189",
+  "colorize.languages": [
+    "javascript",
+    "typescript" // ...
+  ],
+  "colorize.colorized_colors": ["HEXA"]
+}
