@@ -1,21 +1,18 @@
-import { extendTheme } from '@chakra-ui/react'
+import { extendTheme, ThemeConfig } from '@chakra-ui/react'
 
-export const theme = extendTheme({
+const config: ThemeConfig = {
+  initialColorMode: 'light',
+  useSystemColorMode: false
+}
+
+const theme = extendTheme({
+  config,
   colors: {
-    black: '#3D3D3D',
-    white: '#fafafa',
-    Purple: {
-      300: '#9776C8',
-      500: '#6c36bc',
-      800: '#23123D'
-    },
-    Yellow: {
-      500: '#F0C22E'
-    },
-    Green: {
-      300: '#85DD6F',
-      500: '#4cd62b',
-      800: '#3BA321'
+    white: '#f7f9fa',
+    black: '#13131a',
+    red: {
+      500: '#e02041',
+      600: '#be1b36'
     }
   },
   fonts: {
@@ -23,3 +20,4 @@ export const theme = extendTheme({
     body: 'Roboto'
   }
 })
+export default theme

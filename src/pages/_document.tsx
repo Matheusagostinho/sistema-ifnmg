@@ -45,6 +45,9 @@ export default class MyDocument extends Document {
         </Head>
         <body>
           <Main />
+          <script
+            src={`https://maps.googleapis.com/maps/api/js?key=${process.env.API_KEY}&libraries=places`}
+          ></script>
           <NextScript />
         </body>
       </Html>

@@ -28,7 +28,7 @@ export function ModalLogin({ isOpen, onClose }) {
                 <img src="/images/google-icon.svg" alt="AjudaAi" />
                 Conectar com o Google
               </button>
-              <div className={styles.separator}> ou entre em uma sala</div>
+              <div className={styles.separator}> ou entre com seu e-mail</div>
               <form>
                 <Input type="text" placeholder="E-mail" />
                 <Input type="text" placeholder="Senha" />

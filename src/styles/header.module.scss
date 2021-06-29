@@ -1,0 +1,27 @@
+.header {
+  height: 84px;
+  box-shadow: (0px 4px 5px rgba(0, 0, 0, 0.05));
+  display: flex;
+  padding: 0 32px;
+  align-items: center;
+  justify-content: space-between;
+
+  img {
+    max-width: 132px;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    a {
+      font-size: 1.8rem;
+      font-weight: 500;
+    }
+    button {
+      width: 64px;
+      font-size: 1.5rem;
+    }
+  }
+}

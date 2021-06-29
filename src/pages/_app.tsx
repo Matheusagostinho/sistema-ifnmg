@@ -1,5 +1,5 @@
-import { ChakraProvider } from '@chakra-ui/react'
-import { theme } from '../styles/theme'
+import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
+import theme from '../styles/theme'
 import NextNProgress from 'nextjs-progressbar'
 import '../styles/global.scss'
 
@@ -13,6 +13,7 @@ function MyApp({ Component, pageProps }) {
         height={5}
       />
       <ChakraProvider theme={theme}>
+        <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <Component {...pageProps} />
       </ChakraProvider>
     </>
