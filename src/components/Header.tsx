@@ -7,7 +7,9 @@ export function Header() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <header className={styles.header}>
-      <img src="/images/logo.png" alt="AjudaAi" />
+      <Link href="/">
+        <img src="/images/logo.png" alt="AjudaAi" />
+      </Link>
       <div className={styles.buttons}>
         <Link href="">
           <a>Sobre</a>

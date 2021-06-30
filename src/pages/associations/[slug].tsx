@@ -35,7 +35,7 @@ export default function Associations(props: dataProps) {
         <h1> Associações em {props.slug}</h1>
         <Wrap spacing="8px">
           <WrapItem>
-            <Cards />
+            <Cards associationId="01" />
           </WrapItem>
           <WrapItem>
             <Cards />

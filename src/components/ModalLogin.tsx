@@ -37,7 +37,7 @@ export function ModalLogin({ isOpen, onClose }) {
                   Entrar
                 </Button>
               </form>
-              <Link href="/cadastro">
+              <Link href="/login">
                 <a>
                   <span> Não tenho cadastro </span>
                   <BsArrowRightShort />

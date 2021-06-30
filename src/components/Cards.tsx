@@ -3,9 +3,13 @@ import Link from 'next/link'
 import { BiRightArrowAlt } from 'react-icons/bi'
 import styles from '../styles/associations.module.scss'
 
-export default function Cards() {
+type CardProps = {
+  associationId?: string
+}
+
+export default function Cards({ associationId }: CardProps) {
   return (
-    <Link href="/">
+    <Link href={`profile/${associationId}`}>
       <Box
         as="a"
         width="100%"

@@ -5,9 +5,14 @@
   padding: 0 32px;
   align-items: center;
   justify-content: space-between;
-
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: var(--background);
   img {
     max-width: 132px;
+    cursor: pointer;
   }
 
   .buttons {
