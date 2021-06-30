@@ -1,4 +1,4 @@
-import { IconButton, SlideFade } from '@chakra-ui/react'
+import { IconButton, SlideFade, Stack, Checkbox } from '@chakra-ui/react'
 import { BsArrowLeftShort } from 'react-icons/bs'
 import { NextPageContext } from 'next'
 import { Header } from '../../../components/Header'
@@ -39,15 +39,43 @@ export default function ProfileAssociation(props: dataProps) {
             </SlideFade>
             <SlideFade in={formDonate} offsetY="100px" unmountOnExit>
               <form className={styles.formDonor}>
-                <div className={!formDonate ? 'none' : ''}>
+                <div>
                   <h3>Dados de Retirada</h3>
                   <Input placeholder="Seu Nome" />
-                  <Input placeholder="" />
-                  <Input placeholder="" />
-                  <div>
-                    <Input placeholder="" />
-                    <Input placeholder="" />
+                  <Input placeholder="Telefone" />
+                  <Input placeholder="Rua" />
+
+                  <div className={styles.locale01}>
+                    <Input placeholder="Bairro" />
+                    <Input placeholder="Numero" />
                   </div>
+                </div>
+                <div>
+                  <h3>Data de Retirada</h3>
+                  <div className={styles.locale01}>
+                    <Input placeholder="Data" />
+                    <Input placeholder="Horário" />
+                  </div>
+                </div>
+                <div>
+                  <h3>O que irá doar?</h3>
+                  <Stack spacing={5} className={styles.donate}>
+                    <Checkbox colorScheme="red" size="lg">
+                      Alimentos não perecíveis
+                    </Checkbox>
+                    <Checkbox colorScheme="red" size="lg">
+                      Alimentos perecíveis
+                    </Checkbox>
+                    <Checkbox colorScheme="red" size="lg">
+                      Roupas
+                    </Checkbox>
+                    <Checkbox colorScheme="red" size="lg">
+                      Brinquedos
+                    </Checkbox>
+                    <Checkbox colorScheme="red" size="lg">
+                      Outros
+                    </Checkbox>
+                  </Stack>
                 </div>
               </form>
             </SlideFade>
