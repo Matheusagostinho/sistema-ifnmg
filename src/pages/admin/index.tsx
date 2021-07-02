@@ -1,22 +1,22 @@
 import Link from 'next/link'
-import { Button } from '../components/Button'
+import { Button } from '../../components/Button'
 import { FiLogIn } from 'react-icons/fi'
-import styles from '../styles/home.module.scss'
+import styles from '../../styles/admin.module.scss'
 import Head from 'next/head'
 import { Input } from 'components/Input'
-import { BsArrowLeftShort } from 'react-icons/bs'
+import { BsArrowRightShort } from 'react-icons/bs'
 import { SlideFade } from '@chakra-ui/react'
 import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 
-export default function Login() {
+export default function Portal() {
   function handleFormLogin(event: FormEvent) {
     event.preventDefault()
   }
   return (
     <>
       <Head>
-        <title>Ajuda ai</title>
+        <title>Portal Associação- Ajuda ai</title>
         <link rel="icon" href="/favicon.png" />
       </Head>
       <div id={styles.pageAuth}>
@@ -24,23 +24,8 @@ export default function Login() {
           <SlideFade in={true} offsetY="-20px" className={styles.mainContent}>
             <img src="/images/logo.png" alt="AjudaAi" />
 
-            <div className={styles.titleSmartphone}>
-              <strong>
-                Falta pouco para você alegrar o dia de alguém :{')'}
-              </strong>
-              <p>
-                O AjudaAi é uma plataforma para conectar quem precisa de ajuda
-                com quem queira ajudar!
-              </p>
-            </div>
-            <h1>Preencha com seus dados:</h1>
+            <h1>Faça seu login</h1>
             <form onSubmit={handleFormLogin}>
-              <Input
-                type="text"
-                placeholder="Seu nome"
-                // onChange={}
-                // value={}
-              />
               <Input
                 type="email"
                 placeholder="E-mail"
@@ -53,21 +38,16 @@ export default function Login() {
                 // onChange={}
                 // value={}
               />
-              <Input
-                type="password"
-                placeholder="Repita sua Senha"
-                // onChange={}
-                // value={}
-              />
+
               <Button type="submit">
                 <FiLogIn />
-                Cadastrar
+                Entrar
               </Button>
             </form>
-            <Link href="/">
+            <Link href="/admin/cadastrar">
               <a>
-                <BsArrowLeftShort />
-                <span> Voltar para login </span>
+                <span> Não tenho cadastro </span>
+                <BsArrowRightShort />
               </a>
             </Link>
           </SlideFade>
@@ -75,16 +55,9 @@ export default function Login() {
         <aside>
           <SlideFade in={true} offsetY="20px">
             <img
-              src="images/illustration.png"
+              src="images/illustrationred.png"
               alt="Ilustração simbolizando perguntas e respostas"
             />
-            <strong>
-              Falta pouco para você alegrar o dia de alguém :{')'}
-            </strong>
-            <p>
-              O AjudaAi é uma plataforma para conectar quem precisa de ajuda com
-              quem queira ajudar!
-            </p>
           </SlideFade>
         </aside>
       </div>

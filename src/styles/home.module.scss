@@ -108,6 +108,22 @@
         color: var(--red-500);
       }
     }
+    a {
+      margin-top: 2rem;
+      display: flex;
+      font-size: 1.3rem;
+      font-weight: 500;
+      align-items: center;
+      justify-content: flex-start;
+
+      > svg {
+        font-size: 2.5rem;
+        color: var(--red-500);
+      }
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
   .suggestions {
     background-color: var(--gray-50);

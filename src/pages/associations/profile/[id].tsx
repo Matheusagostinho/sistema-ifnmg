@@ -37,7 +37,7 @@ export default function ProfileAssociation(props: dataProps) {
               <h2>Campanhas:</h2>
               <h2>Conheça mais sobre nós:</h2>
             </SlideFade>
-            <SlideFade in={formDonate} offsetY="100px" unmountOnExit>
+            <SlideFade in={formDonate} offsetX="320px" unmountOnExit>
               <form className={styles.formDonor}>
                 <div>
                   <h3>Dados de Retirada</h3>
@@ -53,8 +53,8 @@ export default function ProfileAssociation(props: dataProps) {
                 <div>
                   <h3>Data de Retirada</h3>
                   <div className={styles.locale01}>
-                    <Input placeholder="Data" />
-                    <Input placeholder="Horário" />
+                    <Input type="date" placeholder="Data" />
+                    <Input type="time" placeholder="Horário" />
                   </div>
                 </div>
                 <div>
