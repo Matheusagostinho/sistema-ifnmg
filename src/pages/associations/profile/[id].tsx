@@ -37,7 +37,7 @@ export default function ProfileAssociation(props: dataProps) {
               <h2>Campanhas:</h2>
               <h2>Conheça mais sobre nós:</h2>
             </SlideFade>
-            <SlideFade in={formDonate} offsetX="320px" unmountOnExit>
+            <SlideFade in={formDonate} offsetY="20px" unmountOnExit>
               <form className={styles.formDonor}>
                 <div>
                   <h3>Dados de Retirada</h3>
