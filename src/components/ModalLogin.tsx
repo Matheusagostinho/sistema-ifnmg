@@ -36,7 +36,7 @@ const signInFormSchema = yup.object().shape({
 })
 
 export function ModalLogin({ isOpen, onClose }) {
-  const { signInWithGoogle } = useAuth()
+  const { signInWithGoogle, user } = useAuth()
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(signInFormSchema)
   })
@@ -47,6 +47,11 @@ export function ModalLogin({ isOpen, onClose }) {
     await new Promise(resolve => setTimeout(resolve, 1500))
     console.log(values)
   }
+
+  const handleSignInGoogle = async () => {
+    await signInWithGoogle()
+    onClose()
+  }
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="sm">
       <ModalOverlay />
@@ -55,7 +60,10 @@ export function ModalLogin({ isOpen, onClose }) {
         <ModalBody>
           <div className={styles.container}>
             <div className={styles.content}>
-              <button className={styles.createRoom} onClick={signInWithGoogle}>
+              <button
+                className={styles.createRoom}
+                onClick={handleSignInGoogle}
+              >
                 <img src="/images/google-icon.svg" alt="AjudaAi" />
                 Conectar-se com o Google
               </button>

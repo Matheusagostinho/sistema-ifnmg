@@ -25,19 +25,31 @@ export default function Home({ cities }: HomeProps) {
   const [city, setCity] = useState('')
   const [zIndex, setZIndex] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isError, setIsError] = useState(null)
   const router = useRouter()
 
   const handleCity = async event => {
     event.preventDefault()
+
+    if (city === '') {
+      setIsError({
+        message: 'Procure por sua cidade'
+      })
+      return
+    }
     const [{ slug }] = cities.filter(item => {
       if (item.name === city) return item.id
     })
 
     setIsSubmitting(true)
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    await router.push(`/associations/${slug}`)
     setIsSubmitting(false)
-    router.push(`/associations/${slug}`)
   }
+  function isAreTypingNow(e) {
+    setCity(e.target.value)
+    setIsError(null)
+  }
+
   function onChangeSetCity(name) {
     setCity(name)
     setZIndex(1)
@@ -83,10 +95,11 @@ export default function Home({ cities }: HomeProps) {
                 placeholder="Nome da cidade"
                 name="city"
                 label="Encontre Associações em sua Cidade"
-                onChange={e => setCity(e.target.value)}
+                onChange={e => isAreTypingNow(e)}
                 value={city}
                 mb="2"
                 onFocus={() => setZIndex(-10)}
+                error={isError}
               />
               <div className={styles.suggestions}>
                 {cities
