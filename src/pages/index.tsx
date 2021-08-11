@@ -147,7 +147,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   return {
     props: {
       cities
-    },
-    revalidate: 60 * 60 * 5
+    }
+    // revalidate: 60 * 60 * 5
   }
 }

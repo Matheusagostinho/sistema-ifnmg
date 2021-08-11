@@ -161,7 +161,7 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
   return {
     props: {
       association
-    },
-    revalidate: 60 * 30 // 30 minutes
+    }
+    // revalidate: 60 * 30 // 30 minutes
   }
 }
