@@ -1,27 +1,38 @@
 import { IconButton, SlideFade, Stack, Checkbox } from '@chakra-ui/react'
 import { BsArrowLeftShort } from 'react-icons/bs'
-import { NextPageContext } from 'next'
-import { Header } from '../../../components/Header'
-import { Button } from '../../../components/Button'
-import styles from '../../../styles/profile.module.scss'
+import { GetStaticPaths, GetStaticProps } from 'next'
+import { Header } from '../../components/Header'
+import { Button } from '../../components/Form/Button'
+import styles from '../../styles/profile.module.scss'
 import { useState } from 'react'
 import { Input } from 'components/Input'
-type dataProps = {
+import { api } from 'services/api'
+type Association = {
   id: string
+  name: string
+  description: string
+  urlImage: string
+  phone: string
+  since: string
+  about: string
 }
-export default function ProfileAssociation(props: dataProps) {
+type DataProps = {
+  association: Association
+}
+export default function ProfileAssociation({ association }: DataProps) {
   const [formDonate, setFormDonate] = useState(false)
+
   return (
     <>
       <Header />
       <div className={styles.container}>
         <main>
           <div className={styles.aside}>
-            <img src="/images/image.png" alt="Imagem da associação" />
-            <h2> Associação 01</h2>
-            <span>Ajudando desde 2019</span>
+            <img src={association.urlImage} alt="Imagem da associação" />
+            <h2> {association.name}</h2>
+            <span>Ajudando desde {association.since}</span>
             <h3>Contato:</h3>
-            <p>(38) 99901-0101</p>
+            <p>{association.phone}</p>
           </div>
           <div className={styles.content}>
             <SlideFade
@@ -31,7 +42,7 @@ export default function ProfileAssociation(props: dataProps) {
             >
               <h2>Sobre:</h2>
               <div>
-                <p></p>
+                <p>{association.about}</p>
               </div>
               <h2>Projetos sociais:</h2>
               <h2>Campanhas:</h2>
@@ -72,7 +83,7 @@ export default function ProfileAssociation(props: dataProps) {
                     <Checkbox colorScheme="red" size="lg">
                       Brinquedos
                     </Checkbox>
-                    <Checkbox colorScheme="red" size="lg">
+                    <Checkbox colorScheme="red" size="lg" co>
                       Outros
                     </Checkbox>
                   </Stack>
@@ -91,17 +102,20 @@ export default function ProfileAssociation(props: dataProps) {
                 onClick={e => setFormDonate(false)}
                 icon={<BsArrowLeftShort size="2.5rem" />}
                 marginRight="1rem"
-                h="48px"
                 borderRadius="8px"
-                w="48px"
-                marginBottom="8px"
+                h={['42px', '45px']}
+                w={['42px', '45px']}
               />
-              <Button type="button" onClick={e => setFormDonate(false)}>
+              <Button
+                type="button"
+                onClick={e => setFormDonate(false)}
+                w="320px"
+              >
                 Finalizar Doação :D
               </Button>
             </>
           ) : (
-            <Button type="button" onClick={e => setFormDonate(true)}>
+            <Button type="button" onClick={e => setFormDonate(true)} w="320px">
               Doe sem sair de casa :{')'}
             </Button>
           )}
@@ -111,25 +125,43 @@ export default function ProfileAssociation(props: dataProps) {
   )
 }
 
-export async function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths = async () => {
+  const { data } = await api.get('/associations/pirapora-mg', {
+    params: {
+      __limit: 6
+    }
+  })
+
+  const paths = data.map(association => ({
+    params: {
+      id: association._id
+    }
+  }))
+
   return {
-    paths: [
-      {
-        params: {
-          id: '01'
-        }
-      }
-    ],
-    fallback: true
+    paths,
+    fallback: 'blocking'
   }
 }
 
-export async function getStaticProps(context) {
-  const id = context.params.id
+export const getStaticProps: GetStaticProps = async ctx => {
+  const { id } = ctx.params
+  const { data } = await api.get(`/profile/${id}`, {})
+
+  const association = {
+    id: data._id,
+    name: data.name,
+    description: data.description,
+    urlImage: data.url_image,
+    phone: data.phone,
+    since: data.since,
+    about: data.about
+  }
 
   return {
     props: {
-      id: id
-    }
+      association
+    },
+    revalidate: 60 * 30 // 30 minutes
   }
 }

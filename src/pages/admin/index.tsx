@@ -1,11 +1,11 @@
 import Link from 'next/link'
-import { Button } from '../../components/Button'
+import { Button } from '../../components/Form/Button'
 import { FiLogIn } from 'react-icons/fi'
 import styles from '../../styles/admin.module.scss'
 import Head from 'next/head'
 import { Input } from 'components/Input'
 import { BsArrowRightShort } from 'react-icons/bs'
-import { SlideFade } from '@chakra-ui/react'
+import { Icon, SlideFade } from '@chakra-ui/react'
 import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 
@@ -39,8 +39,13 @@ export default function Portal() {
                 // value={}
               />
 
-              <Button type="submit">
-                <FiLogIn />
+              <Button
+                type="submit"
+                leftIcon={<Icon as={FiLogIn} />}
+                //isLoading={formState.isSubmitting}
+                w="100%"
+                mt="2"
+              >
                 Entrar
               </Button>
             </form>

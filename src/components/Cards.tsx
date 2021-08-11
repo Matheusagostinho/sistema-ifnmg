@@ -2,21 +2,27 @@ import { Box, Flex, Icon, Image, Text } from '@chakra-ui/react'
 import Link from 'next/link'
 import { BiRightArrowAlt } from 'react-icons/bi'
 import styles from '../styles/associations.module.scss'
-
-type CardProps = {
-  associationId?: string
+type Association = {
+  id: string
+  name: string
+  description: string
+  urlImage: string
 }
 
-export default function Cards({ associationId }: CardProps) {
+type CardProps = {
+  association?: Association
+}
+
+export default function Cards({ association }: CardProps) {
   return (
-    <Link href={`profile/${associationId}`}>
+    <Link href={`/profile/${association.id}`}>
       <Box
         as="a"
         width="100%"
         borderWidth="1px"
         borderRadius="md"
         overflow="hidden"
-        h="80px"
+        h="96px"
         maxWidth="390px"
         display="flex"
         justifyContent="row"
@@ -34,13 +40,13 @@ export default function Cards({ associationId }: CardProps) {
           justifyItems="center"
           paddingRight="1rem"
         >
-          <Box
-            w="4.8rem"
-            h="4.8rem"
+          <Image
+            src={association.urlImage}
+            w="3.8rem"
+            h="3.8rem"
             borderRadius="50%"
             boxShadow="xs"
-            bgColor="purple.500"
-          ></Box>
+          ></Image>
         </Flex>
         <Flex
           flex="1"
@@ -51,14 +57,17 @@ export default function Cards({ associationId }: CardProps) {
           justifyItems="center"
           marginY="auto"
         >
-          <Text fontWeight="500"> Campanha de Arrecadação de Alimentos</Text>
+          <Text fontWeight="500" fontSize="0.9rem">
+            {' '}
+            {association.name}
+          </Text>
           <Text
             fontWeight="normal"
-            fontSize="1.2rem"
+            fontSize="0.8rem"
             color="gray.400"
             alignItems="center"
           >
-            Conheça mais sobre essa campanha que visa arrecadar donativos
+            {association.description}
           </Text>
           <Text fontWeight="normal" fontSize="1.1rem" color="gray.400">
             Iniciativa:

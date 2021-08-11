@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Button } from '../components/Button'
+import { Button } from '../components/Form/Button'
 import { FiLogIn } from 'react-icons/fi'
 import styles from '../styles/home.module.scss'
 import Head from 'next/head'

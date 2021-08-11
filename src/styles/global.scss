@@ -13,7 +13,7 @@
   --red-300: #f53b5a;
   --red-400: #f32245;
   --red-500: #e02041;
-  --red-800: #a31830;
+  --red-800: #a81830;
 }
 
 * {
@@ -25,27 +25,21 @@
 }
 
 html {
-  font-size: 68.75%;
-}
-
-@media (max-width: 1080px) {
-  html {
-    font-size: 62.5%;
+  @media (max-width: 1080px) {
+    font-size: 93.75%;
+  }
+  @media (max-width: 720px) {
+    font-size: 87.5%;
   }
 }
 
-@media (max-width: 720px) {
-  html {
-    font-size: 56.25%;
-  }
-}
 body {
-  font-family: Roboto, sans-serif;
-  font-size: 1.3rem;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
   background-color: var(--background);
   color: var(--text);
   svg {
-    font-size: 1.5rem;
+    font-size: 1rem;
   }
 }
 button {

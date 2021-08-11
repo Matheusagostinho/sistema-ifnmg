@@ -1,0 +1,55 @@
+{
+  "associations": [
+    {
+      "id": "fraternidade-auta-de-souza",
+      "name": "Associação de Fraternidade Auta de Souza",
+      "since": "2019",
+      "url_image": "http://www.joannadeangelis.org.br/wp-content/uploads/2016/06/auta-de-souza-300x300.png",
+      "description": "Somos a Sociedade de Fraternidade Auta de Souza, visionando sempre que a caridade é o Caminho.",
+      "about": "Somos a Sociedade de Fraternidade Auta de Souza, visionando sempre que a caridade é o Caminho.",
+      "phone": "(38) 99901-0101",
+      "social": {
+        "url": "https://www.facebook.com/",
+        "type": "facebook"
+      },
+      "id_city": "61134cd32e9ae2091f1df999"
+    },
+    {
+      "id": "fraternidade-auta-de-souza",
+      "name": "Associação de Fraternidade Auta de Souza",
+      "since": "2019",
+      "url_image": "http://www.joannadeangelis.org.br/wp-content/uploads/2016/06/auta-de-souza-300x300.png",
+      "description": "Somos a Sociedade de Fraternidade Auta de Souza, visionando sempre que a caridade é o Caminho.",
+      "about": "Somos a Sociedade de Fraternidade Auta de Souza, visionando sempre que a caridade é o Caminho.",
+      "phone": "(38) 99901-0101",
+      "social": {
+        "url": "https://www.facebook.com/",
+        "type": "facebook"
+      },
+      "id_city": "janauba"
+    }
+  ],
+
+  "cities": [
+    {
+      "id": "pirapora",
+      "name": "Pirapora",
+      "uf": "MG"
+    },
+    {
+      "id": "buritizeiro",
+      "name": "Buritizeiro",
+      "uf": "MG"
+    },
+    {
+      "id": "varzea-da-palma",
+      "name": "Várzea da Palma",
+      "uf": "MG"
+    },
+    {
+      "id": "janauba",
+      "name": "Janaúba",
+      "uf": "MG"
+    }
+  ]
+}

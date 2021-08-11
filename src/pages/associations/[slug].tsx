@@ -1,73 +1,108 @@
-import { Wrap, WrapItem } from '@chakra-ui/react'
+import { Box, Image, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import Cards from 'components/Cards'
-import { NextPageContext } from 'next'
+import { GetStaticPaths, GetStaticProps, NextPageContext } from 'next'
+import { api } from 'services/api'
 import { Header } from '../../components/Header'
 import styles from '../../styles/associations.module.scss'
-type dataProps = {
-  slug: 'string'
+type Association = {
+  id: string
+  name: string
+  description: string
+  urlImage: string
 }
-export default function Associations(props: dataProps) {
+type City = {
+  id: string
+  name: string
+}
+
+type dataProps = {
+  associations: Association[]
+  nameCity: string
+}
+export default function Associations({ associations, nameCity }: dataProps) {
+  console.log(associations)
+
   return (
     <>
       <Header />
       <div className={styles.container}>
-        <h1> Campanhas em {props.slug}</h1>
-        <Wrap spacing="8px">
-          <WrapItem>
-            <Cards />
-          </WrapItem>
-          <WrapItem>
-            <Cards />
-          </WrapItem>
-          <WrapItem>
-            <Cards />
-          </WrapItem>
-          <WrapItem>
-            <Cards />
-          </WrapItem>
-          <WrapItem>
-            <Cards />
-          </WrapItem>
-          <WrapItem>
-            <Cards />
-          </WrapItem>
-        </Wrap>
-        <h1> Associações em {props.slug}</h1>
-        <Wrap spacing="8px">
-          <WrapItem>
-            <Cards associationId="01" />
-          </WrapItem>
-          <WrapItem>
-            <Cards />
-          </WrapItem>
-          <WrapItem>
-            <Cards />
-          </WrapItem>
-        </Wrap>
+        {associations.length !== 0 ? (
+          <>
+            <h1> Campanhas em {nameCity}</h1>
+            <Wrap spacing="8px"></Wrap>
+            <h1> Associações em {nameCity}</h1>
+            <Wrap spacing="8px">
+              {associations.map(association => (
+                <WrapItem key={association.id}>
+                  <Cards association={association} />
+                </WrapItem>
+              ))}
+            </Wrap>
+          </>
+        ) : (
+          <Box
+            height="100%"
+            mt="6rem"
+            alignItems="center"
+            display="flex"
+            flexDir="column"
+            justify="center"
+          >
+            <Image src="/images/searching.svg" maxW="320px" />
+            <Text display="block" fontWeight="bold" textAlign="center">
+              Ops...
+            </Text>
+
+            <Text display="block" mt="2" color="gray.400" textAlign="center">
+              Ainda não tem associações cadastradas em sua cidade!
+            </Text>
+          </Box>
+        )}
       </div>
     </>
   )
 }
 
-export async function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths = async () => {
+  const { data } = await api.get('/cities', {
+    params: {
+      __limit: 4
+    }
+  })
+
+  const paths = data.map(city => ({
+    params: {
+      slug: city.slug
+    }
+  }))
+
   return {
-    paths: [
-      {
-        params: {
-          slug: '1'
-        }
-      }
-    ],
+    paths,
     fallback: true
   }
 }
 
-export async function getStaticProps(context) {
-  const slug = context.params.slug
+export const getStaticProps: GetStaticProps = async ctx => {
+  const { slug } = ctx.params
+
+  const city = await api.get(`/cities/${slug}`)
+
+  const { data } = await api.get(`/associations/${city.data._id}`)
+
+  const nameCity = city.data.name
+
+  const associations = data.map(item => ({
+    id: item._id,
+    name: item.name,
+    description: item.description,
+    urlImage: item.url_image
+  }))
 
   return {
     props: {
-      slug: slug
-    }
+      associations,
+      nameCity
+    },
+    revalidate: 60 * 30 // 30 minutes
   }
 }

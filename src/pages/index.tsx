@@ -1,30 +1,47 @@
-import { Button } from '../components/Button'
+import { Button } from '../components/Form/Button'
 import { FiLogIn } from 'react-icons/fi'
 import removeAccents from 'remove-accents'
 import styles from '../styles/home.module.scss'
 import Head from 'next/head'
-import { Input } from 'components/Input'
 
-import { SlideFade } from '@chakra-ui/react'
-import { FormEvent, useState } from 'react'
+import { Icon, SlideFade } from '@chakra-ui/react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
+import { api } from 'services/api'
+import { GetStaticProps } from 'next'
+import { Input } from '../components/Form/Input'
 
-export default function Home() {
+type City = {
+  id: string
+  name: string
+  slug: string
+}
+
+type HomeProps = {
+  cities: City[]
+}
+
+export default function Home({ cities }: HomeProps) {
   const [city, setCity] = useState('')
-  const cities = [
-    { id: 1, name: 'Pirapora-MG' },
-    { id: 2, name: 'Várzea da Palma-MG' },
-    { id: 3, name: 'Buritizeiro-MG' },
-    { id: 4, name: 'Janaúba-MG' }
-  ]
-
+  const [zIndex, setZIndex] = useState(1)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
 
-  function handleCity(event: FormEvent) {
+  const handleCity = async event => {
     event.preventDefault()
-    router.push(`/associations/${city}`)
-  }
+    const [{ slug }] = cities.filter(item => {
+      if (item.name === city) return item.id
+    })
 
+    setIsSubmitting(true)
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    setIsSubmitting(false)
+    router.push(`/associations/${slug}`)
+  }
+  function onChangeSetCity(name) {
+    setCity(name)
+    setZIndex(1)
+  }
   return (
     <>
       <Head>
@@ -64,8 +81,12 @@ export default function Home() {
               <Input
                 type="text"
                 placeholder="Nome da cidade"
+                name="city"
+                label="Encontre Associações em sua Cidade"
                 onChange={e => setCity(e.target.value)}
                 value={city}
+                mb="2"
+                onFocus={() => setZIndex(-10)}
               />
               <div className={styles.suggestions}>
                 {cities
@@ -89,15 +110,19 @@ export default function Home() {
                     <div>
                       <button
                         type="button"
-                        onClick={e => setCity(filteredName.name)}
+                        onClick={() => onChangeSetCity(filteredName.name)}
                       >
                         {filteredName.name}
                       </button>
                     </div>
                   ))}
               </div>
-              <Button type="submit">
-                <FiLogIn />
+              <Button
+                type="submit"
+                leftIcon={<Icon as={FiLogIn} />}
+                isLoading={isSubmitting}
+                zIndex={zIndex}
+              >
                 Procurar Associações
               </Button>
             </form>
@@ -108,14 +133,21 @@ export default function Home() {
   )
 }
 
-export const getStaticProps = async () => {
-  const data = {
-    id: ['1', '2', '3'],
-    name: ['Pirapora', 'Buritizeiro', 'Varzea da palma']
-  }
+export const getStaticProps: GetStaticProps = async () => {
+  const { data } = await api.get('/cities', {
+    params: {
+      _limit: 5
+    }
+  })
+  const cities = data.map(city => ({
+    id: city._id,
+    slug: city.slug,
+    name: [city.name, city.uf].join('-')
+  }))
   return {
     props: {
-      cities: data
-    }
+      cities
+    },
+    revalidate: 60 * 60 * 5
   }
 }

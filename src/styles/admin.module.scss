@@ -28,13 +28,13 @@
     }
 
     strong {
-      font: 700 36px 'Poppins', sans-serif;
+      font: 700 1.5rem 'Poppins', sans-serif;
       line-height: 42px;
       margin-top: 16px;
     }
 
     p {
-      font-size: 24px;
+      font-size: 1rem;
       line-height: 32px;
       margin-top: 16px;
       color: var(--gray-100);
@@ -46,7 +46,7 @@
       display: none;
     }
     > strong {
-      font: 700 2rem 'Roboto', sans-serif;
+      font: 700 1.5rem 'Roboto', sans-serif;
       line-height: 2.5rem;
       margin-top: 16px;
     }
@@ -62,12 +62,12 @@
     a {
       margin-top: 2rem;
       display: flex;
-      font-size: 1.3rem;
+      font-size: 1rem;
       font-weight: 500;
       align-items: center;
       justify-content: flex-start;
       > svg {
-        font-size: 2.5rem;
+        font-size: 2rem;
         color: var(--red-500);
       }
       &:hover {
@@ -197,7 +197,7 @@
       text-align: center;
       padding-top: 50px;
       padding-left: 50px;
-      gap: 128px;
+      gap: 3.5rem;
       @media (max-width: 768px) {
         align-items: center;
         text-align: center;
@@ -214,7 +214,7 @@
         }
       }
       h1 {
-        font-size: 3rem;
+        font-size: 1.5rem;
         font-weight: 600;
         text-align: start;
         @media (max-width: 768px) {
@@ -222,14 +222,14 @@
         }
       }
       p {
-        font-size: 1.5rem;
+        font-size: 1rem;
         color: #737380;
         text-align: justify;
       }
       a {
         margin-top: 2rem;
         display: flex;
-        font-size: 1.3rem;
+        font-size: 1rem;
         font-weight: 500;
         align-items: center;
         justify-content: flex-start;
@@ -237,7 +237,7 @@
           display: none;
         }
         > svg {
-          font-size: 2.5rem;
+          font-size: 2rem;
           color: var(--red-500);
         }
         &:hover {
@@ -282,7 +282,7 @@
       a {
         margin-top: 2rem;
         display: flex;
-        font-size: 1.3rem;
+        font-size: 1rem;
         font-weight: 500;
         align-items: center;
         justify-content: flex-start;
@@ -290,7 +290,7 @@
           display: none;
         }
         > svg {
-          font-size: 2.5rem;
+          font-size: 2rem;
           color: var(--red-500);
         }
         &:hover {

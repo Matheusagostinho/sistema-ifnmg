@@ -10,6 +10,7 @@
   top: 0;
   width: 100%;
   background-color: var(--background);
+
   img {
     max-width: 132px;
     cursor: pointer;
@@ -21,12 +22,8 @@
     align-items: center;
 
     a {
-      font-size: 1.8rem;
+      font-size: 1rem;
       font-weight: 500;
-    }
-    button {
-      width: 64px;
-      font-size: 1.5rem;
     }
   }
 }
