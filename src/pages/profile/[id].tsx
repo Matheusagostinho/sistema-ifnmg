@@ -1,6 +1,6 @@
 import { IconButton, SlideFade, Stack, Checkbox } from '@chakra-ui/react'
 import { BsArrowLeftShort } from 'react-icons/bs'
-import { GetStaticPaths, GetStaticProps } from 'next'
+import { GetServerSideProps, GetStaticPaths, GetStaticProps } from 'next'
 import { Header } from '../../components/Header'
 import { Button } from '../../components/Form/Button'
 import styles from '../../styles/profile.module.scss'
@@ -125,26 +125,26 @@ export default function ProfileAssociation({ association }: DataProps) {
   )
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const { data } = await api.get('/associations/pirapora-mg', {
-    params: {
-      __limit: 6
-    }
-  })
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   const { data } = await api.get('/associations/pirapora-mg', {
+//     params: {
+//       __limit: 6
+//     }
+//   })
 
-  const paths = data.map(association => ({
-    params: {
-      id: association._id
-    }
-  }))
+//   const paths = data.map(association => ({
+//     params: {
+//       id: association._id
+//     }
+//   }))
 
-  return {
-    paths,
-    fallback: 'blocking'
-  }
-}
+//   return {
+//     paths,
+//     fallback: 'blocking'
+//   }
+// }
 
-export const getStaticProps: GetStaticProps = async ctx => {
+export const getServerSideProps: GetServerSideProps = async ctx => {
   const { id } = ctx.params
   const { data } = await api.get(`/profile/${id}`, {})
 

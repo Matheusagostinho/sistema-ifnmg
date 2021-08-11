@@ -8,7 +8,7 @@ import { Icon, SlideFade } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { api } from 'services/api'
-import { GetStaticProps } from 'next'
+import { GetServerSideProps, GetStaticProps } from 'next'
 import { Input } from '../components/Form/Input'
 
 type City = {
@@ -133,7 +133,7 @@ export default function Home({ cities }: HomeProps) {
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const { data } = await api.get('/cities', {
     params: {
       _limit: 5

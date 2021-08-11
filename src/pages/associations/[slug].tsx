@@ -1,6 +1,11 @@
 import { Box, Image, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import Cards from 'components/Cards'
-import { GetStaticPaths, GetStaticProps, NextPageContext } from 'next'
+import {
+  GetServerSideProps,
+  GetStaticPaths,
+  GetStaticProps,
+  NextPageContext
+} from 'next'
 import { api } from 'services/api'
 import { Header } from '../../components/Header'
 import styles from '../../styles/associations.module.scss'
@@ -63,26 +68,22 @@ export default function Associations({ associations, nameCity }: dataProps) {
   )
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const { data } = await api.get('/cities', {
-    params: {
-      __limit: 4
-    }
-  })
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   const { data } = await api.get('/cities')
 
-  const paths = data.map(city => ({
-    params: {
-      slug: city.slug
-    }
-  }))
+//   const paths = data.map(city => ({
+//     params: {
+//       slug: city.slug
+//     }
+//   }))
 
-  return {
-    paths,
-    fallback: true
-  }
-}
+//   return {
+//     paths,
+//     fallback: true
+//   }
+// }
 
-export const getStaticProps: GetStaticProps = async ctx => {
+export const getServerSideProps: GetServerSideProps = async ctx => {
   const { slug } = ctx.params
 
   const city = await api.get(`/cities/${slug}`)
