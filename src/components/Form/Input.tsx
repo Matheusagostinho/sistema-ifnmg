@@ -6,7 +6,8 @@ import {
   Icon,
   Input as ChakraInput,
   InputProps as ChakraInputProps,
-  Tooltip
+  Tooltip,
+  useBreakpointValue
 } from '@chakra-ui/react'
 import { FieldErrors } from 'react-hook-form'
 import { FiAlertCircle } from 'react-icons/fi'
@@ -24,6 +25,10 @@ export function Input({
   isBgWhite = false,
   ...rest
 }: InputProps) {
+  const isWideVersion = useBreakpointValue({
+    base: false,
+    lg: true
+  })
   return (
     <FormControl isInvalid={!!error}>
       {!!label && <FormLabel htmlFor={name}>{label}</FormLabel>}
@@ -54,6 +59,11 @@ export function Input({
               <Icon as={FiAlertCircle} color="red.500" w={4} h={4} />
             </FormErrorMessage>
           </Tooltip>
+        )}
+        {isWideVersion && (
+          <FormErrorMessage ml={-6} mt={0} zIndex="tooltip">
+            <Icon as={FiAlertCircle} color="red.500" w={4} h={4} />
+          </FormErrorMessage>
         )}
       </Box>
     </FormControl>
