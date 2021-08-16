@@ -5,7 +5,7 @@ import { Header } from '../../components/Header'
 import { Button } from '../../components/Form/Button'
 import styles from '../../styles/profile.module.scss'
 import { useState } from 'react'
-import { Input } from 'components/Input'
+import { Input } from '../../components/Form/Input'
 import { api } from 'services/api'
 type Association = {
   id: string
