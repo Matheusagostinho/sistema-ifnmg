@@ -3,15 +3,48 @@ import { Button } from '../components/Form/Button'
 import { FiLogIn } from 'react-icons/fi'
 import styles from '../styles/home.module.scss'
 import Head from 'next/head'
-import { Input } from 'components/Input'
+import { Input } from '../components/Form/Input'
 import { BsArrowLeftShort } from 'react-icons/bs'
-import { SlideFade } from '@chakra-ui/react'
+import { Icon, LinkBox, SlideFade, Stack } from '@chakra-ui/react'
 import { FormEvent, useState } from 'react'
-import { useRouter } from 'next/router'
+import router, { Router, useRouter } from 'next/router'
+
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { SubmitHandler, useForm } from 'react-hook-form'
+
+type SignInFormData = {
+  email: string
+  name: string
+  password: string
+  passwordConfirmation: string
+}
+
+const signInFormSchema = yup.object().shape({
+  name: yup.string().required('O nome é um campo obrigatório'),
+  email: yup
+    .string()
+    .required('O E-mail é um campo obrigatório')
+    .email('E-mail Inválido'),
+  password: yup.string().required('A senha é um campo obrigatório'),
+  passwordConfirmation: yup
+    .string()
+    .oneOf([null, yup.ref('password')], 'As senhas precisam ser iguais')
+})
 
 export default function Login() {
-  function handleFormLogin(event: FormEvent) {
+  const { register, handleSubmit, formState } = useForm({
+    resolver: yupResolver(signInFormSchema)
+  })
+  const { errors } = formState
+  const handleFormLogIn: SubmitHandler<SignInFormData> = async (
+    values,
+    event
+  ) => {
     event.preventDefault()
+
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    console.log(values)
   }
   return (
     <>
@@ -34,42 +67,50 @@ export default function Login() {
               </p>
             </div>
             <h1>Preencha com seus dados:</h1>
-            <form onSubmit={handleFormLogin}>
+            <Stack
+              as="form"
+              spacing="2"
+              onSubmit={handleSubmit(handleFormLogIn)}
+            >
               <Input
                 type="text"
                 placeholder="Seu nome"
-                // onChange={}
-                // value={}
+                error={errors.name}
+                {...register('name')}
               />
               <Input
                 type="email"
                 placeholder="E-mail"
-                // onChange={}
-                // value={}
+                error={errors.email}
+                {...register('email')}
               />
               <Input
                 type="password"
                 placeholder="Senha"
-                // onChange={}
-                // value={}
+                error={errors.password}
+                {...register('password')}
               />
               <Input
                 type="password"
                 placeholder="Repita sua Senha"
-                // onChange={}
-                // value={}
+                error={errors.passwordConfirmation}
+                {...register('passwordConfirmation')}
               />
-              <Button type="submit">
-                <FiLogIn />
+              <Button
+                type="submit"
+                leftIcon={<Icon as={FiLogIn} />}
+                isLoading={formState.isSubmitting}
+                w="100%"
+              >
                 Cadastrar
               </Button>
-            </form>
-            <Link href="/">
+            </Stack>
+            <LinkBox onClick={() => router.back()} cursor="pointer">
               <a>
                 <BsArrowLeftShort />
                 <span> Voltar para login </span>
               </a>
-            </Link>
+            </LinkBox>
           </SlideFade>
         </main>
         <aside>

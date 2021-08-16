@@ -32,7 +32,6 @@ export function Header() {
     <Flex
       as="header"
       w="100%"
-      maxWidth={1480}
       h="20"
       mx="auto"
       marginBottom="6"
@@ -42,23 +41,26 @@ export function Header() {
       position="fixed"
       top="0"
       zIndex="docked"
+      justify="center"
     >
-      {!isWideVersion && (
-        <IconButton
-          icon={<Icon as={RiMenuLine} fontSize="20" />}
-          fontSize="24"
-          color="gray.100"
-          variant="unstyled"
-          onClick={onOpen}
-          aria-label="Open navigation"
-          mr="2"
-        ></IconButton>
-      )}
-      <Logo />
+      <Flex w="100%" maxWidth={1480}>
+        {!isWideVersion && (
+          <IconButton
+            icon={<Icon as={RiMenuLine} fontSize="20" />}
+            fontSize="24"
+            color="gray.100"
+            variant="unstyled"
+            onClick={onOpen}
+            aria-label="Open navigation"
+            mr="2"
+          ></IconButton>
+        )}
+        <Logo />
 
-      <Flex align="center" ml="auto">
-        <Notification />
-        <Profile showProfileDate={isWideVersion} />
+        <Flex align="center" ml="auto">
+          <Notification />
+          <Profile showProfileDate={isWideVersion} />
+        </Flex>
       </Flex>
     </Flex>
   )

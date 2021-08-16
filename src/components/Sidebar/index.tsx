@@ -33,7 +33,7 @@ export function Sidebar() {
     )
   }
   return (
-    <Box bg="#221D25" position="fixed" height="100%" ml="-6" top="20">
+    <Box bg="#221D25" position="fixed" height="100%" top="20" left="0">
       <Box as="aside" mx="4" mt="6">
         <SideBarNav />
       </Box>

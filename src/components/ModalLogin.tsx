@@ -93,7 +93,7 @@ export function ModalLogin({ isOpen, onClose }) {
                   Entrar
                 </Button>
               </form>
-              <Link href="/login">
+              <Link href="/signup">
                 <a>
                   <span> Não tenho cadastro </span>
                   <BsArrowRightShort />
