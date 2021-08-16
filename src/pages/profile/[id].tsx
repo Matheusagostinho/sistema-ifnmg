@@ -7,6 +7,10 @@ import styles from '../../styles/profile.module.scss'
 import { useState } from 'react'
 import { Input } from '../../components/Form/Input'
 import { api } from 'services/api'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { SubmitHandler, useForm } from 'react-hook-form'
+
 type Association = {
   id: string
   name: string
@@ -19,8 +23,32 @@ type Association = {
 type DataProps = {
   association: Association
 }
+
+type SignInFormData = {
+  email: string
+  password: string
+}
+
+const signInFormSchema = yup.object().shape({
+  email: yup
+    .string()
+    .required('O E-mail é um campo obrigatório')
+    .email('E-mail Inválido'),
+  password: yup.string().required('A senha é um campo obrigatório')
+})
 export default function ProfileAssociation({ association }: DataProps) {
   const [formDonate, setFormDonate] = useState(false)
+
+  const { register, handleSubmit, formState } = useForm({
+    resolver: yupResolver(signInFormSchema)
+  })
+  const { errors } = formState
+  const handleSignIn: SubmitHandler<SignInFormData> = async (values, event) => {
+    event.preventDefault()
+
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    console.log(values)
+  }
 
   return (
     <>
@@ -52,20 +80,50 @@ export default function ProfileAssociation({ association }: DataProps) {
               <form className={styles.formDonor}>
                 <div>
                   <h3>Dados de Retirada</h3>
-                  <Input placeholder="Seu Nome" />
-                  <Input placeholder="Telefone" />
-                  <Input placeholder="Rua" />
+                  <Input
+                    error={errors.name}
+                    {...register('name')}
+                    placeholder="Seu Nome"
+                  />
+                  <Input
+                    placeholder="Telefone"
+                    error={errors.phone}
+                    {...register('phone')}
+                  />
+                  <Input
+                    placeholder="Rua"
+                    error={errors.street}
+                    {...register('street')}
+                  />
 
                   <div className={styles.locale01}>
-                    <Input placeholder="Bairro" />
-                    <Input placeholder="Numero" />
+                    <Input
+                      placeholder="Bairro"
+                      error={errors.district}
+                      {...register('district')}
+                    />
+                    <Input
+                      placeholder="Numero"
+                      error={errors.number}
+                      {...register('number')}
+                    />
                   </div>
                 </div>
                 <div>
                   <h3>Data de Retirada</h3>
                   <div className={styles.locale01}>
-                    <Input type="date" placeholder="Data" />
-                    <Input type="time" placeholder="Horário" />
+                    <Input
+                      type="date"
+                      placeholder="Data"
+                      error={errors.date}
+                      {...register('date')}
+                    />
+                    <Input
+                      type="time"
+                      placeholder="Horário"
+                      error={errors.hour}
+                      {...register('hour')}
+                    />
                   </div>
                 </div>
                 <div>
