@@ -7,7 +7,7 @@ import { Input } from '../../components/Form/Input'
 import { BsArrowRightShort } from 'react-icons/bs'
 import { Icon, SlideFade } from '@chakra-ui/react'
 import { FormEvent, useState } from 'react'
-import { useRouter } from 'next/router'
+import router, { useRouter } from 'next/router'
 
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -33,9 +33,9 @@ export default function Portal() {
   const { errors } = formState
   const handleSignIn: SubmitHandler<SignInFormData> = async (values, event) => {
     event.preventDefault()
-
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    console.log(values)
+    router.push('/admin/dashboard')
+    // await new Promise(resolve => setTimeout(resolve, 1500))
+    // console.log(values)
   }
   return (
     <>
