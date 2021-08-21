@@ -1,4 +1,13 @@
-import { IconButton, SlideFade, Stack, Checkbox } from '@chakra-ui/react'
+import {
+  IconButton,
+  SlideFade,
+  Stack,
+  Checkbox,
+  VStack,
+  Grid,
+  Box,
+  GridItem
+} from '@chakra-ui/react'
 import { BsArrowLeftShort } from 'react-icons/bs'
 import { GetServerSideProps, GetStaticPaths, GetStaticProps } from 'next'
 import { Header } from '../../components/Header'
@@ -77,76 +86,99 @@ export default function ProfileAssociation({ association }: DataProps) {
               <h2>Conheça mais sobre nós:</h2>
             </SlideFade>
             <SlideFade in={formDonate} offsetY="200px" unmountOnExit>
-              <form className={styles.formDonor}>
-                <div>
-                  <h3>Dados de Retirada</h3>
-                  <Input
-                    error={errors.name}
-                    {...register('name')}
-                    placeholder="Seu Nome"
-                  />
-                  <Input
-                    placeholder="Telefone"
-                    error={errors.phone}
-                    {...register('phone')}
-                  />
-                  <Input
-                    placeholder="Rua"
-                    error={errors.street}
-                    {...register('street')}
-                  />
+              <VStack
+                as="form"
+                onSubmit={handleSubmit(handleSignIn)}
+                spacing="2"
+                className={styles.formDonor}
+              >
+                <h3>Dados de Retirada</h3>
+                <Input
+                  error={errors.name}
+                  {...register('name')}
+                  placeholder="Seu Nome"
+                />
+                <Input
+                  placeholder="Telefone"
+                  error={errors.phone}
+                  {...register('phone')}
+                />
+                <Input
+                  placeholder="Rua"
+                  error={errors.street}
+                  {...register('street')}
+                />
 
-                  <div className={styles.locale01}>
-                    <Input
-                      placeholder="Bairro"
-                      error={errors.district}
-                      {...register('district')}
-                    />
-                    <Input
-                      placeholder="Numero"
-                      error={errors.number}
-                      {...register('number')}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <h3>Data de Retirada</h3>
-                  <div className={styles.locale01}>
-                    <Input
-                      type="date"
-                      placeholder="Data"
-                      error={errors.date}
-                      {...register('date')}
-                    />
-                    <Input
-                      type="time"
-                      placeholder="Horário"
-                      error={errors.hour}
-                      {...register('hour')}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <h3>O que irá doar?</h3>
-                  <Stack spacing={5} className={styles.donate}>
-                    <Checkbox colorScheme="red" size="lg">
-                      Alimentos não perecíveis
-                    </Checkbox>
-                    <Checkbox colorScheme="red" size="lg">
-                      Alimentos perecíveis
-                    </Checkbox>
-                    <Checkbox colorScheme="red" size="lg">
-                      Roupas
-                    </Checkbox>
-                    <Checkbox colorScheme="red" size="lg">
-                      Brinquedos
-                    </Checkbox>
-                    <Checkbox colorScheme="red" size="lg" co>
-                      Outros
-                    </Checkbox>
-                  </Stack>
-                </div>
-              </form>
+                <Box display="flex">
+                  <Grid templateColumns="repeat(6, 1fr)" gap={2}>
+                    <GridItem colSpan={4} h="10">
+                      <Input
+                        type="text"
+                        placeholder="Bairro"
+                        error={errors.district}
+                        {...register('district')}
+                      />
+                    </GridItem>
+                    <GridItem colSpan={2} h="10">
+                      <Input
+                        type="number"
+                        placeholder="Número"
+                        error={errors.number}
+                        {...register('number')}
+                      />
+                    </GridItem>
+                  </Grid>
+                </Box>
+
+                <h3>Data de Retirada</h3>
+                <Box display="flex">
+                  <Grid templateColumns="repeat(2, 1fr)" gap={2}>
+                    <GridItem colSpan={1} h="10">
+                      <Input
+                        type="date"
+                        placeholder="Cidade"
+                        error={errors.city}
+                        {...register('city')}
+                      />
+                    </GridItem>
+                    <GridItem colSpan={1} h="10">
+                      <Input
+                        type="time"
+                        placeholder="UF"
+                        error={errors.uf}
+                        {...register('uf')}
+                      />
+                    </GridItem>
+                  </Grid>
+                </Box>
+
+                <h3>O que irá doar?</h3>
+                <Stack
+                  spacing={3}
+                  className={styles.donate}
+                  display="flex"
+                  flexDir="column"
+                  align="flex-start"
+                  justifyContent="flex-start"
+                  width="100%"
+                >
+                  <Checkbox colorScheme="red" size="lg" display="block">
+                    Alimentos não perecíveis
+                  </Checkbox>
+                  <Checkbox colorScheme="red" size="lg">
+                    Alimentos perecíveis
+                  </Checkbox>
+                  <Checkbox colorScheme="red" size="lg">
+                    Roupas
+                  </Checkbox>
+                  <Checkbox colorScheme="red" size="lg">
+                    Brinquedos
+                  </Checkbox>
+                  <Checkbox colorScheme="red" size="lg" co>
+                    Outros
+                  </Checkbox>
+                </Stack>
+              </VStack>
             </SlideFade>
           </div>
         </main>

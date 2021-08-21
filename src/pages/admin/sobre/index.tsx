@@ -41,6 +41,7 @@ import {
   RiPencilLine
 } from 'react-icons/ri'
 import { ModifyInput } from 'components/Form/ModifyInput'
+import { getSession } from 'next-auth/client'
 
 type CreateUserFormData = {
   name: string
@@ -278,4 +279,19 @@ export default function CreateUser() {
       </Flex>
     </LayoutOutAdmin>
   )
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession({ req: context.req })
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/admin/dashboard',
+        permanent: false
+      }
+    }
+  }
+  return {
+    props: { session }
+  }
 }

@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   IconButton,
-  Checkbox,
   Flex,
   Heading,
   Icon,
@@ -19,7 +18,7 @@ import {
   Switch
 } from '@chakra-ui/react'
 
-import { RiAddLine, RiCloseCircleLine, RiPencilLine } from 'react-icons/ri'
+import { RiAddLine, RiPencilLine } from 'react-icons/ri'
 
 import { Pagination } from '../../../components/Pagination'
 import { useUsers } from '../../../services/hooks/useUsers'
@@ -66,6 +65,7 @@ export default function campaignList() {
     base: false,
     lg: true
   })
+
   return (
     <LayoutOutAdmin>
       <Flex mb="8" justify="space-between" align="center">

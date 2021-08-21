@@ -36,6 +36,7 @@ import { useUsers } from 'services/hooks/useUsers'
 import { queryClient } from 'services/queryClient'
 import { api } from 'services/api'
 import { Pagination } from 'components/Pagination'
+import { getSession } from 'next-auth/client'
 
 export default function Dashboard() {
   const [page, setPage] = useState(1)
@@ -374,4 +375,19 @@ export default function Dashboard() {
       </Flex>
     </Flex>
   )
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession({ req: context.req })
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/admin',
+        permanent: false
+      }
+    }
+  }
+  return {
+    props: { session }
+  }
 }

@@ -5,21 +5,25 @@ import styles from '../../styles/admin.module.scss'
 import Head from 'next/head'
 import { Input } from '../../components/Form/Input'
 import { BsArrowLeftShort } from 'react-icons/bs'
+import removeAccents from 'remove-accents'
+import slugify from 'react-slugify'
+
 import {
   Box,
   Grid,
   GridItem,
   Icon,
   SlideFade,
-  Stack,
+  useToast,
   VStack
 } from '@chakra-ui/react'
-import { FormEvent, useState } from 'react'
-import { useRouter } from 'next/router'
+import { FormEvent, useEffect, useState } from 'react'
+import router, { useRouter } from 'next/router'
 
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { SubmitHandler, useForm, useWatch } from 'react-hook-form'
+import { api } from 'services/api'
 
 type SignInFormData = {
   email: string
@@ -34,7 +38,11 @@ type SignInFormData = {
   password: string
   passwordConfirmation: string
 }
-
+type City = {
+  _id: string
+  name: string
+  slug: string
+}
 const signInFormSchema = yup.object().shape({
   email: yup
     .string()
@@ -42,7 +50,10 @@ const signInFormSchema = yup.object().shape({
     .email('E-mail Inválido'),
   nameAssociation: yup.string().required('O nome da Associação é obrigatório'),
   nameDir: yup.string().required('O nome do dirigente é obrigatório'),
-  phoneNumber: yup.string().required('O telefone é um campo obrigatório'),
+  phoneNumber: yup
+    .string()
+    .required('O telefone é um campo obrigatório')
+    .min(11, 'Numero Incompleto'),
   street: yup.string().required('A rua é um campo obrigatório'),
   district: yup.string().required('O Bairro é um campo obrigatório'),
   number: yup.string().required('O número é um campo obrigatório'),
@@ -61,15 +72,99 @@ const signInFormSchema = yup.object().shape({
 })
 
 export default function Register() {
-  const { register, handleSubmit, formState } = useForm({
+  const [cities, setCities] = useState<City[]>([] as City[])
+  const {
+    register,
+    handleSubmit,
+    formState,
+    clearErrors,
+    setValue,
+    watch,
+    reset
+  } = useForm({
     resolver: yupResolver(signInFormSchema)
   })
+
+  useEffect(() => {
+    async function loadCities() {
+      const { data } = await api.get('/cities')
+      setCities(data)
+      clearErrors()
+    }
+    loadCities()
+  }, [])
+
+  const watchAllFields = watch()
   const { errors } = formState
+  const toast = useToast()
   const handleSignIn: SubmitHandler<SignInFormData> = async (values, event) => {
     event.preventDefault()
 
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    console.log(values)
+    if (values.passwordConfirmation !== values.password) {
+      toast({
+        title: `Senhas estão diferentes`,
+        status: 'error',
+        isClosable: true,
+        position: 'top-right'
+      })
+      return
+    }
+
+    const { _id } = cities.find(city => city.name === values.city) || {
+      _id: ''
+    }
+    if (_id === '') {
+      toast({
+        title: `Cidade nao existe`,
+        status: 'error',
+        isClosable: true,
+        position: 'top-right'
+      })
+      return
+    }
+
+    const data = {
+      name: values.nameAssociation,
+      email: values.email.toLowerCase(),
+      director: values.nameDir,
+      slug: slugify(values.nameAssociation),
+      phone: values.phoneNumber.replace(/[^0-9]+/g, ''),
+      address: {
+        street: values.street,
+        number: values.number,
+        district: values.district
+      },
+      id_city: _id,
+      password: values.password
+    }
+    const res = await api.post('/associations/create', data)
+
+    if (res.status === 204) {
+      toast({
+        title: `E-mail ja cadastrado`,
+        status: 'warning',
+        isClosable: true,
+        position: 'top-right'
+      })
+      return
+    }
+
+    if (res.status === 201) {
+      toast({
+        title: `Cadastro feito com sucesso`,
+        status: 'success',
+        isClosable: true,
+        position: 'top-right'
+      })
+      router.push('/admin')
+    }
+
+    return
+  }
+
+  function onChangeSetCity(name: String) {
+    setValue('city', name)
+    setValue('uf', 'MG')
   }
   return (
     <>
@@ -119,7 +214,8 @@ export default function Register() {
                 {...register('email')}
               />
               <Input
-                type="number"
+                mask="(99) 9 9999-9999"
+                type="text"
                 placeholder="WhatsApp"
                 error={errors.phoneNumber}
                 {...register('phoneNumber')}
@@ -158,7 +254,43 @@ export default function Register() {
                       placeholder="Cidade"
                       error={errors.city}
                       {...register('city')}
+                      value={watchAllFields.city}
                     />
+                    <div className={styles.suggestions}>
+                      {cities
+                        .filter(name => {
+                          if (watchAllFields.city === '') {
+                            return false
+                          } else if (
+                            removeAccents(name.name).toLowerCase() ===
+                            removeAccents(
+                              String(watchAllFields.city).toLowerCase()
+                            )
+                          )
+                            return false
+                          else if (
+                            removeAccents(name.name)
+                              .toLowerCase()
+                              .includes(
+                                removeAccents(
+                                  String(watchAllFields.city).toLowerCase()
+                                )
+                              )
+                          ) {
+                            return name
+                          }
+                        })
+                        .map(filteredName => (
+                          <div>
+                            <button
+                              type="button"
+                              onClick={() => onChangeSetCity(filteredName.name)}
+                            >
+                              {filteredName.name}
+                            </button>
+                          </div>
+                        ))}
+                    </div>
                   </GridItem>
                   <GridItem colSpan={2} h="10">
                     <Input
@@ -166,6 +298,7 @@ export default function Register() {
                       placeholder="UF"
                       error={errors.uf}
                       {...register('uf')}
+                      value={watchAllFields.uf}
                     />
                   </GridItem>
                 </Grid>

@@ -7,6 +7,8 @@ import { SidebarDrawerProvider } from 'contexts/SidebarContext'
 import { QueryClientProvider } from 'react-query'
 import { queryClient } from 'services/queryClient'
 import { AuthContextProvider } from 'contexts/AuthContext'
+import { Provider } from 'next-auth/client'
+import { AssociationProvider } from 'contexts/AssociationContex'
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -19,14 +21,18 @@ function MyApp({ Component, pageProps }) {
       />
       <QueryClientProvider client={queryClient}>
         <AuthContextProvider>
-          <ChakraProvider theme={theme}>
-            <SidebarDrawerProvider>
-              <ColorModeScript
-                initialColorMode={theme.config.initialColorMode}
-              />
-              <Component {...pageProps} />
-            </SidebarDrawerProvider>
-          </ChakraProvider>
+          <Provider session={pageProps.session}>
+            <AssociationProvider>
+              <ChakraProvider theme={theme}>
+                <SidebarDrawerProvider>
+                  <ColorModeScript
+                    initialColorMode={theme.config.initialColorMode}
+                  />
+                  <Component {...pageProps} />
+                </SidebarDrawerProvider>
+              </ChakraProvider>
+            </AssociationProvider>
+          </Provider>
         </AuthContextProvider>
       </QueryClientProvider>
     </>

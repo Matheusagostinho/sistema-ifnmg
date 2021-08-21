@@ -5,9 +5,9 @@ import styles from '../../styles/admin.module.scss'
 import Head from 'next/head'
 import { Input } from '../../components/Form/Input'
 import { BsArrowRightShort } from 'react-icons/bs'
-import { Icon, SlideFade } from '@chakra-ui/react'
-import { FormEvent, useState } from 'react'
-import router, { useRouter } from 'next/router'
+import { Icon, SlideFade, useToast } from '@chakra-ui/react'
+import router from 'next/router'
+import { signIn, getSession, useSession } from 'next-auth/client'
 
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -30,13 +30,40 @@ export default function Portal() {
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(signInFormSchema)
   })
+  const toast = useToast()
   const { errors } = formState
+
   const handleSignIn: SubmitHandler<SignInFormData> = async (values, event) => {
     event.preventDefault()
-    router.push('/admin/dashboard')
-    // await new Promise(resolve => setTimeout(resolve, 1500))
-    // console.log(values)
+    const status = await signIn('credentials', {
+      redirect: false,
+      email: values.email,
+      password: values.password
+    })
+
+    if (status.error) {
+      toast({
+        title: `${status.error}`,
+        status: 'error',
+        isClosable: true,
+        position: 'top-right'
+      })
+      return
+    }
+
+    const session = await getSession()
+
+    if (session) {
+      toast({
+        title: `Login com Sucesso`,
+        status: 'success',
+        isClosable: true,
+        position: 'top-right'
+      })
+      router.push('/admin/dashboard')
+    }
   }
+
   return (
     <>
       <Head>
@@ -93,4 +120,19 @@ export default function Portal() {
       </div>
     </>
   )
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession({ req: context.req })
+  if (session) {
+    return {
+      redirect: {
+        destination: '/admin/dashboard',
+        permanent: false
+      }
+    }
+  }
+  return {
+    props: { session }
+  }
 }
