@@ -28,7 +28,7 @@ export function Profile({ showProfileDate = true }: ProfileProps) {
     <Flex align="center">
       {showProfileDate && (
         <Box mr="4" textAlign="right">
-          <Text color="gray.50">Matheus Agostinho</Text>
+          <Text color="gray.50">{association?.director}</Text>
           <Text color="red.200" fontSize="small">
             {association?.email}
           </Text>
@@ -36,8 +36,8 @@ export function Profile({ showProfileDate = true }: ProfileProps) {
       )}
       <Avatar
         size="md"
-        name="Matheus Agostinho"
-        src="https://github.com/Matheusagostinho.png"
+        name={association?.director}
+        src={association?.url_image}
       />
       <Menu size="10px">
         <MenuButton

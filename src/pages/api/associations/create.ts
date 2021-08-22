@@ -15,8 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const { db } = await connectToDatabase()
     // check if email existed
     if ((await db.collection('associations').countDocuments({ email })) > 0) {
-      res.status(204).send('Email já existe')
-      return
+      res.status(204).send('O Email já existe')
     } else {
       const hashedPassword = await bcrypt.hash(data.password, 10)
       const association = {
@@ -26,16 +25,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         url_image: '',
         description: '',
         about: '',
-        social: [
-          {
-            url: '',
-            type: 'facebook'
-          },
-          {
-            url: '',
-            type: 'instagram'
-          }
-        ],
+        people_assisted: '',
+        facebook: '',
+        instagram: '',
         active: true
       }
       const user = await db.collection('associations').insertOne(association)
