@@ -137,26 +137,29 @@ export default function Register() {
       id_city: _id,
       password: values.password
     }
-    const res = await api.post('/associations/create', data)
 
-    if (res.status === 403) {
-      toast({
-        title: `E-mail ja cadastrado`,
-        status: 'warning',
-        isClosable: true,
-        position: 'top-right'
-      })
-      return
-    }
+    try {
+      const res = await api.post('/associations/create', data)
 
-    if (res.status === 201) {
-      toast({
-        title: `Cadastro feito com sucesso`,
-        status: 'success',
-        isClosable: true,
-        position: 'top-right'
-      })
-      router.push('/admin')
+      if (res.status === 201) {
+        toast({
+          title: `Cadastro feito com sucesso`,
+          status: 'success',
+          isClosable: true,
+          position: 'top-right'
+        })
+        router.push('/admin')
+      }
+    } catch (err) {
+      if (err.response.status === 409) {
+        toast({
+          title: `E-mail já cadastrado`,
+          status: 'warning',
+          isClosable: true,
+          position: 'top-right'
+        })
+        return
+      }
     }
 
     return
@@ -255,7 +258,6 @@ export default function Register() {
                       error={errors.city}
                       {...register('city')}
                       value={watchAllFields.city}
-                      onFocus={() => reset({ city: '' })}
                     />
                     <div className={styles.suggestions}>
                       {cities
@@ -300,11 +302,6 @@ export default function Register() {
                       error={errors.uf}
                       {...register('uf')}
                       value={watchAllFields.uf}
-                      onFocus={() =>
-                        reset({
-                          uf: 'MG'
-                        })
-                      }
                     />
                   </GridItem>
                 </Grid>

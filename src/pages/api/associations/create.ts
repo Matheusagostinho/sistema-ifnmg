@@ -5,7 +5,6 @@ import bcrypt from 'bcryptjs'
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     const data = req.body
-    console.log(data)
 
     const email = req.body.email // this is to handle things like jane.doe@gmail.com and janedoe@gmail.com being the same
 
@@ -15,7 +14,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const { db } = await connectToDatabase()
     // check if email existed
     if ((await db.collection('associations').countDocuments({ email })) > 0) {
-      res.status(403).send('O Email já existe')
+      res.status(409).send('O Email já existe')
     } else {
       const hashedPassword = await bcrypt.hash(data.password, 10)
       const association = {
