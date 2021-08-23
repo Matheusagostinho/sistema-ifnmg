@@ -6,7 +6,10 @@ import {
   VStack,
   Grid,
   Box,
-  GridItem
+  GridItem,
+  Button as ButtonChakra,
+  Link,
+  LinkOverlay
 } from '@chakra-ui/react'
 import { BsArrowLeftShort } from 'react-icons/bs'
 import { GetServerSideProps, GetStaticPaths, GetStaticProps } from 'next'
@@ -19,6 +22,7 @@ import { api } from 'services/api'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { FaFacebook, FaInstagram } from 'react-icons/fa'
 
 type Association = {
   id: string
@@ -28,6 +32,15 @@ type Association = {
   phone: string
   since: string
   about: string
+  address: {
+    street: string
+    number: string
+    district: string
+  }
+  id_city: string
+  people_assisted: string
+  facebook: string
+  instagram: string
 }
 type DataProps = {
   association: Association
@@ -82,8 +95,35 @@ export default function ProfileAssociation({ association }: DataProps) {
                 <p>{association.about}</p>
               </div>
               <h2>Projetos sociais:</h2>
-              <h2>Campanhas:</h2>
-              <h2>Conheça mais sobre nós:</h2>
+              {/* <h2>Campanhas:</h2> */}
+              {(association.facebook || association.instagram) && (
+                <>
+                  <h2>Conheça mais sobre nós:</h2>
+                  <Box mt="4">
+                    {association.facebook && (
+                      <ButtonChakra
+                        leftIcon={<FaFacebook />}
+                        colorScheme="facebook"
+                      >
+                        <LinkOverlay href={association.facebook} isExternal>
+                          Facebook
+                        </LinkOverlay>
+                      </ButtonChakra>
+                    )}
+                    {association.instagram && (
+                      <ButtonChakra
+                        leftIcon={<FaInstagram />}
+                        colorScheme="pink"
+                        ml="2"
+                      >
+                        <LinkOverlay href={association.instagram} isExternal>
+                          Instagram
+                        </LinkOverlay>
+                      </ButtonChakra>
+                    )}
+                  </Box>
+                </>
+              )}
             </SlideFade>
             <SlideFade in={formDonate} offsetY="200px" unmountOnExit>
               <VStack
@@ -238,6 +278,7 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
   const { id } = ctx.params
   const { data } = await api.get(`/profile/${id}`, {})
 
+  const address = []
   const association = {
     id: data._id,
     name: data.name,
@@ -245,7 +286,17 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
     urlImage: data.url_image,
     phone: data.phone,
     since: data.since,
-    about: data.about
+    about: data.about,
+    address: {
+      street: data.address.street,
+      number: data.address.number,
+      district: data.address.district
+    },
+    id_city: data.id_city,
+    people_assisted: data.people_assisted,
+
+    facebook: data.facebook,
+    instagram: data.instagram
   }
 
   return {

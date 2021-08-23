@@ -128,7 +128,7 @@ export default function Register() {
       email: values.email.toLowerCase(),
       director: values.nameDir,
       slug: slugify(values.nameAssociation),
-      phone: values.phoneNumber.replace(/[^0-9]+/g, ''),
+      phone: values.phoneNumber, //.replace(/[^0-9]+/g, ''),
       address: {
         street: values.street,
         number: values.number,

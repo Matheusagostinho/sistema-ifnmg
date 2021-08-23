@@ -4,6 +4,7 @@ import {
   Button,
   Flex,
   HStack,
+  Icon,
   IconButton,
   Menu,
   MenuButton,
@@ -11,7 +12,9 @@ import {
   MenuList,
   Text,
   useBreakpointValue,
-  useDisclosure
+  useDisclosure,
+  Link as LinkChakra,
+  Image
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import styles from './header.module.scss'
@@ -19,36 +22,88 @@ import { ModalLogin } from 'components/ModalLogin'
 import { useAuth } from 'hooks/useAuth'
 import {
   RiArrowDownSLine,
-  RiArrowDropDownLine,
   RiLogoutCircleLine,
-  RiProfileLine,
+  RiMenuLine,
   RiUserLine
 } from 'react-icons/ri'
+import { MdSwapHoriz } from 'react-icons/md'
+import { ReactNode } from 'react'
+import { useRouter } from 'next/router'
+import { destroyCookie } from 'nookies'
+import { FaRegAddressCard } from 'react-icons/fa'
 
-export function Header() {
+interface HeaderProps {
+  children?: ReactNode
+}
+
+export function Header({ children }: HeaderProps) {
+  const router = useRouter()
   const { user, signOut } = useAuth()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const isWideVersion = useBreakpointValue({
     base: false,
     lg: true
   })
+  function toReplaceCity() {
+    router.push('/')
+    destroyCookie(undefined, 'ajudaai.cityId')
+    destroyCookie(undefined, 'ajudaai.citySlug')
+    destroyCookie(undefined, 'ajudaai.cityName')
+  }
+
   return (
     <header className={styles.header}>
       <Link href="/">
-        <img src="/images/logo.png" alt="AjudaAi" />
+        <Image w={['100px', '132px']} src="/images/logo.png" alt="AjudaAi" />
       </Link>
+      <Box>{children}</Box>
       <div className={styles.buttons}>
         <HStack
-          spacing={['6', '8']}
-          mx={['6', '8']}
-          pr={['4', '6']}
+          spacing={['2', '4']}
+          mx={['2', '4']}
+          pr={['2', '4']}
           py="1"
           borderRightWidth={1}
           borderColor="gray.500"
         >
-          <Link href="">
-            <a>Sobre</a>
-          </Link>
+          {!user && isWideVersion && (
+            <>
+              <LinkChakra
+                color="red.500"
+                display="flex"
+                fontSize="sm"
+                onClick={toReplaceCity}
+                alignContent="center"
+              >
+                <Text display="block"> Trocar de cidade</Text>
+              </LinkChakra>
+            </>
+          )}
+          {!isWideVersion ? (
+            <Menu colorScheme="red" size="10px">
+              <MenuButton
+                as={IconButton}
+                aria-label="Options"
+                icon={<RiMenuLine size="25" />}
+                variant="outline"
+                bgColor="transparent"
+                borderWidth="0"
+                borderRadius="6px"
+              />
+              <MenuList zIndex="tooltip">
+                <MenuItem icon={<FaRegAddressCard />}>
+                  Sobre a Plataforma
+                </MenuItem>
+                <MenuItem icon={<MdSwapHoriz />} onClick={signOut}>
+                  Trocar de Cidade
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          ) : (
+            <LinkChakra href="">
+              <a>Sobre a Plataforma</a>
+            </LinkChakra>
+          )}
         </HStack>
 
         {!user ? (
@@ -67,6 +122,7 @@ export function Header() {
                 </Text>
               </Box>
             )}
+
             <Menu colorScheme="red" size="10px">
               <MenuButton
                 as={IconButton}
@@ -79,6 +135,9 @@ export function Header() {
               />
               <MenuList zIndex="tooltip">
                 <MenuItem icon={<RiUserLine />}>Perfil</MenuItem>
+                <MenuItem icon={<MdSwapHoriz />} onClick={signOut}>
+                  Trocar de Cidade
+                </MenuItem>
                 <MenuItem icon={<RiLogoutCircleLine />} onClick={signOut}>
                   Sair
                 </MenuItem>

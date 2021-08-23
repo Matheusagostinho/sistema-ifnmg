@@ -158,7 +158,7 @@ export default function CreateUser() {
         ...association,
         name: values.name,
 
-        phone: values.phone.replace(/[^0-9]+/g, ''),
+        phone: values.phone,
         address: {
           street: values.street,
           number: values.number,

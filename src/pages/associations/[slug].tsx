@@ -1,11 +1,16 @@
-import { Box, Image, Text, Wrap, WrapItem } from '@chakra-ui/react'
-import Cards from 'components/Cards'
 import {
-  GetServerSideProps,
-  GetStaticPaths,
-  GetStaticProps,
-  NextPageContext
-} from 'next'
+  Box,
+  Image,
+  Text,
+  useBreakpointValue,
+  useDisclosure,
+  Wrap,
+  WrapItem
+} from '@chakra-ui/react'
+import Cards from 'components/Cards'
+import { InicialModal } from 'components/InicialModal'
+import { GetServerSideProps } from 'next'
+import { useEffect } from 'react'
 import { api } from 'services/api'
 import { Header } from '../../components/Header'
 import styles from '../../styles/associations.module.scss'
@@ -24,18 +29,46 @@ type dataProps = {
   associations: Association[]
   nameCity: string
 }
-export default function Associations({ associations, nameCity }: dataProps) {
-  console.log(associations)
 
+export default function Associations({ associations, nameCity }: dataProps) {
+  const isWideVersion = useBreakpointValue({
+    base: false,
+    lg: true
+  })
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  useEffect(() => {
+    onOpen()
+  }, [])
   return (
     <>
-      <Header />
+      <Header>
+        <Box
+          display="flex"
+          flexDir="column"
+          alignContent="center"
+          justifyContent="center"
+          textAlign="center"
+        >
+          {isWideVersion && (
+            <Box w="100%">
+              <Text display="flex">
+                Em {nameCity} mais de
+                <Text color="red.500" fontWeight="bold" mx="1">
+                  {String(associations.length * 100)} pessoas
+                </Text>
+                precisam da sua Ajuda!
+              </Text>
+            </Box>
+          )}
+        </Box>
+      </Header>
       <div className={styles.container}>
         {associations.length !== 0 ? (
           <>
-            <h1> Campanhas em {nameCity}</h1>
-            <Wrap spacing="8px"></Wrap>
-            <h1> Associações em {nameCity}</h1>
+            {/* <h1> Campanhas em {nameCity}</h1>
+            <Wrap spacing="8px"></Wrap> */}
+            <h1> Associações em {nameCity}:</h1>
             <Wrap spacing="8px">
               {associations.map(association => (
                 <WrapItem key={association.id}>
@@ -64,6 +97,28 @@ export default function Associations({ associations, nameCity }: dataProps) {
           </Box>
         )}
       </div>
+      {!isWideVersion && (
+        <InicialModal isOpen={isOpen} onClose={onClose}>
+          <Box
+            h="100%"
+            w="100%"
+            display="flex"
+            p="10"
+            textAlign="center"
+            flexDir="column"
+          >
+            <Image src="/images/team.svg" size="200px" />
+            <Text fontSize="xl" lineHeight="1">
+              Em {nameCity} mais de
+              <Text color="red.500" fontWeight="bold">
+                {' '}
+                {String(associations.length * 100)} pessoas
+              </Text>{' '}
+              precisam da sua Ajuda!
+            </Text>
+          </Box>
+        </InicialModal>
+      )}
     </>
   )
 }

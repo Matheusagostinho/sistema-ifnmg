@@ -5,12 +5,12 @@ import styles from '../styles/home.module.scss'
 import Head from 'next/head'
 
 import { Icon, SlideFade } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { api } from 'services/api'
-import { GetServerSideProps, GetStaticProps } from 'next'
+import { GetServerSideProps } from 'next'
 import { Input } from '../components/Form/Input'
-
+import { setCookie, parseCookies, destroyCookie } from 'nookies'
 type City = {
   id: string
   name: string
@@ -37,10 +37,18 @@ export default function Home({ cities }: HomeProps) {
       })
       return
     }
-    const [{ slug }] = cities.filter(item => {
+    const [{ name, slug, id }] = cities.filter(item => {
       if (item.name === city) return item.id
     })
-
+    setCookie(undefined, 'ajudaai.cityId', id, {
+      maxAge: 60 * 60 * 24 * 30 // 30 days
+    })
+    setCookie(undefined, 'ajudaai.cityName', name, {
+      maxAge: 60 * 60 * 24 * 30 // 30 days
+    })
+    setCookie(undefined, 'ajudaai.citySlug', slug, {
+      maxAge: 60 * 60 * 24 * 30 // 30 days
+    })
     setIsSubmitting(true)
     await router.push(`/associations/${slug}`)
     setIsSubmitting(false)
@@ -146,10 +154,23 @@ export default function Home({ cities }: HomeProps) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ctx => {
+  const cookies = parseCookies(ctx)
+  const id = cookies['ajudaai.cityId']
+  const slug = cookies['ajudaai.citySlug']
+
+  if (id) {
+    return {
+      redirect: {
+        destination: `/associations/${slug}`,
+        permanent: false
+      }
+    }
+  }
+
   const { data } = await api.get('/cities', {
     params: {
-      _limit: 5
+      _limit: 10
     }
   })
   const cities = data.map(city => ({

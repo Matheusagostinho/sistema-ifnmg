@@ -53,12 +53,11 @@ export function AssociationProvider({ children }: AssociationProviderProps) {
       const response = await api.get(`/profile/email/${email}`)
 
       setAssociation(response.data)
-      console.log(response.data)
     }
     if (email) {
       fetchAssociation()
     }
-  }, [session])
+  }, [])
 
   async function updatedAssociation(data) {
     const response = await api.post(
