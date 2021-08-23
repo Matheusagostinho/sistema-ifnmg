@@ -15,7 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const { db } = await connectToDatabase()
     // check if email existed
     if ((await db.collection('associations').countDocuments({ email })) > 0) {
-      res.status(204).send('O Email já existe')
+      res.status(403).send('O Email já existe')
     } else {
       const hashedPassword = await bcrypt.hash(data.password, 10)
       const association = {

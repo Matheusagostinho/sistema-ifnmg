@@ -139,7 +139,7 @@ export default function Register() {
     }
     const res = await api.post('/associations/create', data)
 
-    if (res.status === 204) {
+    if (res.status === 403) {
       toast({
         title: `E-mail ja cadastrado`,
         status: 'warning',
@@ -255,6 +255,7 @@ export default function Register() {
                       error={errors.city}
                       {...register('city')}
                       value={watchAllFields.city}
+                      onFocus={() => reset()}
                     />
                     <div className={styles.suggestions}>
                       {cities
@@ -299,6 +300,7 @@ export default function Register() {
                       error={errors.uf}
                       {...register('uf')}
                       value={watchAllFields.uf}
+                      onFocus={() => reset()}
                     />
                   </GridItem>
                 </Grid>
