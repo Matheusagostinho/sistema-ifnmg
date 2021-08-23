@@ -255,7 +255,7 @@ export default function Register() {
                       error={errors.city}
                       {...register('city')}
                       value={watchAllFields.city}
-                      onFocus={() => reset()}
+                      onFocus={() => reset({ city: '' })}
                     />
                     <div className={styles.suggestions}>
                       {cities
@@ -300,7 +300,11 @@ export default function Register() {
                       error={errors.uf}
                       {...register('uf')}
                       value={watchAllFields.uf}
-                      onFocus={() => reset()}
+                      onFocus={() =>
+                        reset({
+                          uf: 'MG'
+                        })
+                      }
                     />
                   </GridItem>
                 </Grid>
