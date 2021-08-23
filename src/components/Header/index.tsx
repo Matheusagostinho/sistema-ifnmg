@@ -45,10 +45,10 @@ export function Header({ children }: HeaderProps) {
     lg: true
   })
   function toReplaceCity() {
-    router.push('/')
     destroyCookie(undefined, 'ajudaai.cityId')
     destroyCookie(undefined, 'ajudaai.citySlug')
     destroyCookie(undefined, 'ajudaai.cityName')
+    router.push('/')
   }
 
   return (
@@ -58,28 +58,15 @@ export function Header({ children }: HeaderProps) {
       </Link>
       <Box>{children}</Box>
       <div className={styles.buttons}>
-        <HStack
-          spacing={['2', '4']}
-          mx={['2', '4']}
-          pr={['2', '4']}
-          py="1"
-          borderRightWidth={1}
-          borderColor="gray.500"
-        >
-          {!user && isWideVersion && (
-            <>
-              <LinkChakra
-                color="red.500"
-                display="flex"
-                fontSize="sm"
-                onClick={toReplaceCity}
-                alignContent="center"
-              >
-                <Text display="block"> Trocar de cidade</Text>
-              </LinkChakra>
-            </>
-          )}
-          {!isWideVersion ? (
+        {!user && (
+          <HStack
+            spacing={['2', '4']}
+            mx={['2', '4']}
+            pr={['2', '4']}
+            py="1"
+            borderRightWidth={1}
+            borderColor="gray.500"
+          >
             <Menu colorScheme="red" size="10px">
               <MenuButton
                 as={IconButton}
@@ -94,17 +81,13 @@ export function Header({ children }: HeaderProps) {
                 <MenuItem icon={<FaRegAddressCard />}>
                   Sobre a Plataforma
                 </MenuItem>
-                <MenuItem icon={<MdSwapHoriz />} onClick={signOut}>
+                <MenuItem icon={<MdSwapHoriz />} onClick={toReplaceCity}>
                   Trocar de Cidade
                 </MenuItem>
               </MenuList>
             </Menu>
-          ) : (
-            <LinkChakra href="">
-              <a>Sobre a Plataforma</a>
-            </LinkChakra>
-          )}
-        </HStack>
+          </HStack>
+        )}
 
         {!user ? (
           <Button onClick={onOpen} colorScheme="red" size="sm" variant="solid">
@@ -135,7 +118,10 @@ export function Header({ children }: HeaderProps) {
               />
               <MenuList zIndex="tooltip">
                 <MenuItem icon={<RiUserLine />}>Perfil</MenuItem>
-                <MenuItem icon={<MdSwapHoriz />} onClick={signOut}>
+                <MenuItem icon={<FaRegAddressCard />}>
+                  Sobre a Plataforma
+                </MenuItem>
+                <MenuItem icon={<MdSwapHoriz />} onClick={toReplaceCity}>
                   Trocar de Cidade
                 </MenuItem>
                 <MenuItem icon={<RiLogoutCircleLine />} onClick={signOut}>

@@ -8,7 +8,7 @@ import {
   Box,
   GridItem,
   Button as ButtonChakra,
-  Link,
+  Image,
   LinkOverlay
 } from '@chakra-ui/react'
 import { BsArrowLeftShort } from 'react-icons/bs'
@@ -78,10 +78,16 @@ export default function ProfileAssociation({ association }: DataProps) {
       <div className={styles.container}>
         <main>
           <div className={styles.aside}>
-            <img src={association.urlImage} alt="Imagem da associação" />
+            <Image
+              src={association.urlImage}
+              alt={association.name}
+              borderRadius="full"
+              h="160px"
+              w="160px"
+            />
             <h2> {association.name}</h2>
             <span>Ajudando desde {association.since}</span>
-            <h3>Contato:</h3>
+            <h3>Telefone:</h3>
             <p>{association.phone}</p>
           </div>
           <div className={styles.content}>
@@ -172,8 +178,8 @@ export default function ProfileAssociation({ association }: DataProps) {
 
                 <h3>Data de Retirada</h3>
                 <Box display="flex">
-                  <Grid templateColumns="repeat(2, 1fr)" gap={2}>
-                    <GridItem colSpan={1} h="10">
+                  <Grid templateColumns="repeat(4, 1fr)" gap={2}>
+                    <GridItem colSpan={2} h="10">
                       <Input
                         type="date"
                         placeholder="Cidade"
@@ -181,7 +187,7 @@ export default function ProfileAssociation({ association }: DataProps) {
                         {...register('city')}
                       />
                     </GridItem>
-                    <GridItem colSpan={1} h="10">
+                    <GridItem colSpan={2} h="10">
                       <Input
                         type="time"
                         placeholder="UF"
