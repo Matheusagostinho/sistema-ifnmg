@@ -1,4 +1,4 @@
-import { Box, Flex, Icon, Image, Text } from '@chakra-ui/react'
+import { Box, Flex, Image, Text } from '@chakra-ui/react'
 import Link from 'next/link'
 import { BiRightArrowAlt } from 'react-icons/bi'
 import styles from '../styles/associations.module.scss'
@@ -24,6 +24,7 @@ export default function Cards({ association }: CardProps) {
         overflow="hidden"
         h="96px"
         maxWidth="390px"
+        w={['100%', '390px']}
         display="flex"
         justifyContent="row"
         paddingY="5px"
@@ -51,14 +52,13 @@ export default function Cards({ association }: CardProps) {
         <Flex
           flex="1"
           justifyContent="flex-start"
-          marginX="1rem"
+          ml="1rem"
           flexDirection="column"
           lineHeight="short"
           justifyItems="center"
           marginY="auto"
         >
           <Text fontWeight="500" fontSize="0.9rem">
-            {' '}
             {association.name}
           </Text>
           <Text
@@ -69,15 +69,9 @@ export default function Cards({ association }: CardProps) {
           >
             {association.description}
           </Text>
-          <Text fontWeight="normal" fontSize="1.1rem" color="gray.400">
-            Iniciativa:
-            <Text marginLeft="5px" as="span" color="gray.500">
-              Associação 01
-            </Text>
-          </Text>
         </Flex>
         <Flex alignItems="center" justifyItems="center" marginRight="0.8rem">
-          <BiRightArrowAlt size={20} color="var(--red-500)" />
+          <BiRightArrowAlt size={24} color="red.500" />
         </Flex>
       </Box>
     </Link>

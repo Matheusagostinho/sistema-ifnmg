@@ -74,4 +74,4 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   )
 }
 
-export const Input = forwardRef(InputBase)
+export const InputRef = forwardRef(InputBase)

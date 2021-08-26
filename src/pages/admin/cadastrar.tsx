@@ -4,6 +4,7 @@ import { FiLogIn } from 'react-icons/fi'
 import styles from '../../styles/admin.module.scss'
 import Head from 'next/head'
 import { Input } from '../../components/Form/Input'
+import { InputRef } from '../../components/Form/InputRef'
 import { BsArrowLeftShort } from 'react-icons/bs'
 import removeAccents from 'remove-accents'
 import slugify from 'react-slugify'
@@ -169,6 +170,15 @@ export default function Register() {
     setValue('city', name)
     setValue('uf', 'MG')
   }
+  function cleanOldCity() {
+    reset(
+      {
+        city: '',
+        uf: ''
+      },
+      { keepDirty: true }
+    )
+  }
   return (
     <>
       <Head>
@@ -258,6 +268,7 @@ export default function Register() {
                       error={errors.city}
                       {...register('city')}
                       value={watchAllFields.city}
+                      onFocus={cleanOldCity}
                     />
                     <div className={styles.suggestions}>
                       {cities

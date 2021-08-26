@@ -22,6 +22,9 @@ import { Input } from '../../../components/Form/Input'
 import { api } from '../../../services/api'
 import { queryClient } from '../../../services/queryClient'
 import { LayoutOutAdmin } from 'components/LayoutAdmin'
+import { GetServerSideProps } from 'next'
+import { getSession } from 'next-auth/client'
+import connectToDatabase from 'utils/database'
 
 type CreateUserFormData = {
   name: string
@@ -139,4 +142,23 @@ export default function CreateUser() {
       </Flex>
     </LayoutOutAdmin>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async context => {
+  const session = await getSession({ req: context.req })
+  const email = session?.user.email
+  const { db } = await connectToDatabase()
+  const response = await db.collection('associations').findOne({ email })
+
+  if (!session || !response) {
+    return {
+      redirect: {
+        destination: '/admin',
+        permanent: false
+      }
+    }
+  }
+  return {
+    props: { session }
+  }
 }

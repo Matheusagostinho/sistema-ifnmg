@@ -32,6 +32,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { QueryObserverIdleResult } from 'react-query'
 import { LayoutOutAdmin } from 'components/LayoutAdmin'
+import connectToDatabase from 'utils/database'
+import { getSession } from 'next-auth/client'
 
 type User = {
   id: string
@@ -207,13 +209,21 @@ export default function UserList(s) {
   )
 }
 
-// export const getServerSideProps: GetServerSideProps = async () => {
-//   const { users, totalCount } = await getUsers(1)
+export const getServerSideProps: GetServerSideProps = async context => {
+  const session = await getSession({ req: context.req })
+  const email = session?.user.email
+  const { db } = await connectToDatabase()
+  const response = await db.collection('associations').findOne({ email })
 
-//   return {
-//     props: {
-//       users,
-//       totalCount
-//     }
-//   }
-// }
+  if (!session || !response) {
+    return {
+      redirect: {
+        destination: '/admin',
+        permanent: false
+      }
+    }
+  }
+  return {
+    props: { session }
+  }
+}

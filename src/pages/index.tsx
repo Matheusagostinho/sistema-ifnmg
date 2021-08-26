@@ -5,12 +5,12 @@ import styles from '../styles/home.module.scss'
 import Head from 'next/head'
 
 import { Icon, SlideFade } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { api } from 'services/api'
 import { GetServerSideProps } from 'next'
 import { Input } from '../components/Form/Input'
-import { setCookie, parseCookies, destroyCookie } from 'nookies'
+import { setCookie, parseCookies } from 'nookies'
 type City = {
   id: string
   name: string
@@ -23,7 +23,7 @@ type HomeProps = {
 
 export default function Home({ cities }: HomeProps) {
   const [city, setCity] = useState('')
-  const [zIndex, setZIndex] = useState(1)
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isError, setIsError] = useState(null)
   const router = useRouter()
@@ -41,13 +41,13 @@ export default function Home({ cities }: HomeProps) {
       if (item.name === city) return item.id
     })
     setCookie(undefined, 'ajudaai.cityId', id, {
-      maxAge: 60 * 60 * 24 * 30 // 30 days
+      maxAge: 60 * 60 * 24 * 2 // 2 days
     })
     setCookie(undefined, 'ajudaai.cityName', name, {
-      maxAge: 60 * 60 * 24 * 30 // 30 days
+      maxAge: 60 * 60 * 24 * 2 // 2 days
     })
     setCookie(undefined, 'ajudaai.citySlug', slug, {
-      maxAge: 60 * 60 * 24 * 30 // 30 days
+      maxAge: 60 * 60 * 24 * 2 // 2 days
     })
     setIsSubmitting(true)
     await router.push(`/associations/${slug}`)
@@ -60,7 +60,6 @@ export default function Home({ cities }: HomeProps) {
 
   function onChangeSetCity(name) {
     setCity(name)
-    setZIndex(1)
   }
   return (
     <>
@@ -106,7 +105,6 @@ export default function Home({ cities }: HomeProps) {
                 onChange={e => isAreTypingNow(e)}
                 value={city}
                 mb="2"
-                onFocus={() => setZIndex(-10)}
                 error={isError}
               />
               <div className={styles.suggestions}>
@@ -142,7 +140,6 @@ export default function Home({ cities }: HomeProps) {
                 type="submit"
                 leftIcon={<Icon as={FiLogIn} />}
                 isLoading={isSubmitting}
-                zIndex={zIndex}
               >
                 Procurar Associações
               </Button>

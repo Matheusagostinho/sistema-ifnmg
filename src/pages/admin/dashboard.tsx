@@ -36,7 +36,8 @@ import { useUsers } from 'services/hooks/useUsers'
 import { queryClient } from 'services/queryClient'
 import { api } from 'services/api'
 import { Pagination } from 'components/Pagination'
-import { getSession } from 'next-auth/client'
+import { getSession, signOut } from 'next-auth/client'
+import connectToDatabase from 'utils/database'
 
 export default function Dashboard() {
   const [page, setPage] = useState(1)
@@ -379,7 +380,11 @@ export default function Dashboard() {
 
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req })
-  if (!session) {
+  const email = session?.user.email
+  const { db } = await connectToDatabase()
+  const response = await db.collection('associations').findOne({ email })
+
+  if (!session || !response) {
     return {
       redirect: {
         destination: '/admin',

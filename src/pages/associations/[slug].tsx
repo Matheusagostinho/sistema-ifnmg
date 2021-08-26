@@ -1,5 +1,6 @@
 import {
   Box,
+  Heading,
   Image,
   Text,
   useBreakpointValue,
@@ -13,7 +14,6 @@ import { GetServerSideProps } from 'next'
 import { useEffect } from 'react'
 import { api } from 'services/api'
 import { Header } from '../../components/Header'
-import styles from '../../styles/associations.module.scss'
 type Association = {
   id: string
   name: string
@@ -63,12 +63,21 @@ export default function Associations({ associations, nameCity }: dataProps) {
           )}
         </Box>
       </Header>
-      <div className={styles.container}>
+      <Box
+        mt="100px"
+        px={['4', '16', '6', '20']}
+        py="2"
+        display="flex"
+        flexDir="column"
+        justifyContent="center"
+      >
         {associations.length !== 0 ? (
           <>
             {/* <h1> Campanhas em {nameCity}</h1>
             <Wrap spacing="8px"></Wrap> */}
-            <h1> Associações em {nameCity}:</h1>
+            <Heading size="lg" mb="4">
+              Associações em {nameCity}:
+            </Heading>
             <Wrap spacing="8px">
               {associations.map(association => (
                 <WrapItem key={association.id}>
@@ -96,7 +105,7 @@ export default function Associations({ associations, nameCity }: dataProps) {
             </Text>
           </Box>
         )}
-      </div>
+      </Box>
       {!isWideVersion && (
         <InicialModal isOpen={isOpen} onClose={onClose}>
           <Box

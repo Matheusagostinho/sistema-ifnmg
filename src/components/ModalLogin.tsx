@@ -13,7 +13,8 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Icon
+  Icon,
+  useToast
 } from '@chakra-ui/react'
 
 import * as yup from 'yup'
@@ -21,6 +22,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useAuth } from 'hooks/useAuth'
+import { getSession, signIn, SignInResponse } from 'next-auth/client'
 
 type SignInFormData = {
   email: string
@@ -36,16 +38,46 @@ const signInFormSchema = yup.object().shape({
 })
 
 export function ModalLogin({ isOpen, onClose }) {
-  const { signInWithGoogle, user } = useAuth()
+  const { signInWithGoogle, user, fetchDonor } = useAuth()
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(signInFormSchema)
   })
   const { errors } = formState
+  const toast = useToast()
   const handleSignIn: SubmitHandler<SignInFormData> = async (values, event) => {
     event.preventDefault()
+    const status: SignInResponse = await signIn(
+      'donor',
 
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    console.log(values)
+      {
+        redirect: false,
+        email: values.email,
+        password: values.password
+      }
+    )
+
+    if (status.error) {
+      toast({
+        title: `${status.error}`,
+        status: 'error',
+        isClosable: true,
+        position: 'top-right'
+      })
+      return
+    }
+
+    const session = await getSession()
+    const email = session?.user.email
+    if (session) {
+      toast({
+        title: `Login com Sucesso`,
+        status: 'success',
+        isClosable: true,
+        position: 'top-right'
+      })
+      fetchDonor(email)
+      onClose()
+    }
   }
 
   const handleSignInGoogle = async () => {
@@ -53,7 +85,7 @@ export function ModalLogin({ isOpen, onClose }) {
     onClose()
   }
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="sm">
+    <Modal isOpen={isOpen} onClose={onClose} size="md">
       <ModalOverlay />
       <ModalContent>
         <ModalCloseButton />
@@ -72,14 +104,15 @@ export function ModalLogin({ isOpen, onClose }) {
                 <Input
                   name="email"
                   type="email"
-                  label="E-mail"
+                  placeholder="E-mail"
                   error={errors.email}
                   {...register('email')}
+                  mb="2"
                 />
                 <Input
                   name="password"
                   type="password"
-                  label="Senha"
+                  placeholder="Senha"
                   error={errors.password}
                   {...register('password')}
                 />

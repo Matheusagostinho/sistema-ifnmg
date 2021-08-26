@@ -95,7 +95,7 @@ export function Header({ children }: HeaderProps) {
           </Button>
         ) : (
           <Flex align="center">
-            <Avatar size="md" name={user.name} src={user.avatar} />
+            <Avatar size="md" name={user.name} src={user.url_image} />
 
             {isWideVersion && (
               <Box mr="4" textAlign="left">

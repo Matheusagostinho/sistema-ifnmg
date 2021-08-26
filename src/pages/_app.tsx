@@ -20,20 +20,20 @@ function MyApp({ Component, pageProps }) {
         height={5}
       />
       <QueryClientProvider client={queryClient}>
-        <AuthContextProvider>
-          <Provider session={pageProps.session}>
-            <AssociationProvider>
-              <ChakraProvider theme={theme}>
+        <ChakraProvider theme={theme}>
+          <AuthContextProvider>
+            <Provider session={pageProps.session}>
+              <AssociationProvider>
                 <SidebarDrawerProvider>
                   <ColorModeScript
                     initialColorMode={theme.config.initialColorMode}
                   />
                   <Component {...pageProps} />
                 </SidebarDrawerProvider>
-              </ChakraProvider>
-            </AssociationProvider>
-          </Provider>
-        </AuthContextProvider>
+              </AssociationProvider>
+            </Provider>
+          </AuthContextProvider>
+        </ChakraProvider>
       </QueryClientProvider>
     </>
   )

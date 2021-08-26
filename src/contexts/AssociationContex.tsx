@@ -35,6 +35,7 @@ type SignInCredentials = {
 interface AssociationContextData {
   association: AssociationProps
   updatedAssociation: (association: AssociationProps) => void
+  fetchAssociation: (email: string) => void
 }
 
 interface AssociationProviderProps {
@@ -47,17 +48,15 @@ export function AssociationProvider({ children }: AssociationProviderProps) {
   const [association, setAssociation] = useState<AssociationProps>()
   const [session, loading] = useSession()
   const email = session?.user.email
+  async function fetchAssociation(email) {
+    const response = await api.get(`/profile/email/${email}`)
+
+    setAssociation(response.data)
+  }
 
   useEffect(() => {
-    async function fetchAssociation() {
-      const response = await api.get(`/profile/email/${email}`)
-
-      setAssociation(response.data)
-    }
-    if (email) {
-      fetchAssociation()
-    }
-  }, [])
+    fetchAssociation(email)
+  }, [session])
 
   async function updatedAssociation(data) {
     const response = await api.post(
@@ -68,7 +67,9 @@ export function AssociationProvider({ children }: AssociationProviderProps) {
   }
 
   return (
-    <AssociationContext.Provider value={{ association, updatedAssociation }}>
+    <AssociationContext.Provider
+      value={{ association, updatedAssociation, fetchAssociation }}
+    >
       {children}
     </AssociationContext.Provider>
   )

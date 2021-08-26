@@ -7,11 +7,19 @@ import { Input } from '../../components/Form/Input'
 import { BsArrowRightShort } from 'react-icons/bs'
 import { Icon, SlideFade, useToast } from '@chakra-ui/react'
 import router from 'next/router'
-import { signIn, getSession, useSession } from 'next-auth/client'
+import {
+  signIn,
+  getSession,
+  useSession,
+  getProviders,
+  SignInResponse
+} from 'next-auth/client'
 
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { useAssociation } from 'hooks/useAssoctiation'
+import connectToDatabase from 'utils/database'
 
 type SignInFormData = {
   email: string
@@ -32,14 +40,20 @@ export default function Portal() {
   })
   const toast = useToast()
   const { errors } = formState
+  const { fetchAssociation } = useAssociation()
 
   const handleSignIn: SubmitHandler<SignInFormData> = async (values, event) => {
     event.preventDefault()
-    const status = await signIn('credentials', {
-      redirect: false,
-      email: values.email,
-      password: values.password
-    })
+
+    const status: SignInResponse = await signIn(
+      'association',
+
+      {
+        redirect: false,
+        email: values.email,
+        password: values.password
+      }
+    )
 
     if (status.error) {
       toast({
@@ -52,7 +66,7 @@ export default function Portal() {
     }
 
     const session = await getSession()
-
+    const email = session?.user.email
     if (session) {
       toast({
         title: `Login com Sucesso`,
@@ -60,6 +74,7 @@ export default function Portal() {
         isClosable: true,
         position: 'top-right'
       })
+      fetchAssociation(email)
       router.push('/admin/dashboard')
     }
   }
@@ -124,7 +139,19 @@ export default function Portal() {
 
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req })
-  if (session) {
+  console.log(session)
+  const email = session?.user.email
+  const { db } = await connectToDatabase()
+  const response = await db.collection('associations').findOne({ email })
+  console.log(response)
+
+  if (session && !response) {
+    return {
+      props: { session }
+    }
+  }
+
+  if (session && response) {
     return {
       redirect: {
         destination: '/admin/dashboard',

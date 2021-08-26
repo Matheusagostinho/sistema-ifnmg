@@ -47,6 +47,7 @@ import { ModifyInput } from 'components/Form/ModifyInput'
 import { getSession } from 'next-auth/client'
 import { useAssociation } from 'hooks/useAssoctiation'
 import { AssociationProps } from 'contexts/AssociationContex'
+import connectToDatabase from 'utils/database'
 
 type UpdateAssociationFormData = {
   name: string
@@ -439,10 +440,14 @@ export default function CreateUser() {
 
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req })
-  if (!session) {
+  const email = session?.user.email
+  const { db } = await connectToDatabase()
+  const response = await db.collection('associations').findOne({ email })
+
+  if (!session || !response) {
     return {
       redirect: {
-        destination: '/admin/',
+        destination: '/admin',
         permanent: false
       }
     }
