@@ -95,6 +95,8 @@ export default function ProfileAssociation({ association, city }: DataProps) {
   const watchAllFields = watch()
   const toast = useToast()
   useEffect(() => {
+    console.log(user)
+
     reset({
       name: user?.name,
       phone: user?.phone
@@ -109,6 +111,7 @@ export default function ProfileAssociation({ association, city }: DataProps) {
 
     const data = {
       ...user,
+      id: user._id,
       name: values.name,
       phone: values.phone,
       email: user.email,
@@ -117,11 +120,12 @@ export default function ProfileAssociation({ association, city }: DataProps) {
       number: values.number,
       city: values.city,
       uf: values.uf,
-      date: new Date(values.date),
+      date: values.date,
       hour: values.hour,
       donate: values.donate,
       id_association: association.id
     }
+    console.log(data)
 
     try {
       const res = await api.post('/donates/create', data)

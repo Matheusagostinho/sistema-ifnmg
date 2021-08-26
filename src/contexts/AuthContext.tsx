@@ -38,6 +38,11 @@ export const AuthContext = createContext({} as AuthContextType)
 export function AuthContextProvider(props: AuthContextProviderProps) {
   const [user, setUser] = useState<Donor>()
   const toast = useToast()
+  async function fetchDonor(email) {
+    const response = await api.get(`/donors/email/${email}`)
+
+    setUser(response.data)
+  }
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -48,12 +53,7 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
           throw new Error('Missing information from Google Account.')
         }
 
-        setUser({
-          name: displayName,
-          url_image: photoURL,
-          email,
-          method: 'google'
-        })
+        fetchDonor(email)
       }
     })
 
@@ -62,10 +62,19 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
     }
   }, [])
 
+  const signOut = async () => {
+    try {
+      await firebase.auth().signOut()
+    } finally {
+      setUser(null)
+    }
+  }
+
   async function createDonor(data: Donor) {
     try {
       const response = await api.post('/donors/create', data)
-
+      setUser(response.data.donor)
+      console.log(response.data.donor)
       if (response.status === 201 && data.method == 'email') {
         toast({
           title: `Cadastro feito com sucesso`,
@@ -73,8 +82,9 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
           isClosable: true,
           position: 'top-right'
         })
-        setUser(response.data.donor)
       }
+
+      return
     } catch (err) {
       if (err.response.status === 409 && data.method == 'email') {
         toast({
@@ -101,7 +111,6 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
       }
 
       const donor = {
-        ...user,
         name: displayName,
         url_image: photoURL,
         email,
@@ -110,20 +119,6 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
       createDonor(donor)
       console.log(user)
     }
-  }
-
-  const signOut = async () => {
-    try {
-      await firebase.auth().signOut()
-      setUser(null as Donor)
-    } finally {
-    }
-  }
-
-  async function fetchDonor(email) {
-    const response = await api.get(`/donors/email/${email}`)
-
-    setUser(response.data)
   }
 
   return (
