@@ -1,8 +1,5 @@
 import {
-  IconButton,
   SlideFade,
-  Stack,
-  Checkbox,
   VStack,
   Grid,
   Box,
@@ -14,12 +11,12 @@ import {
   Text,
   Link,
   useDisclosure,
-  CheckboxGroup,
   Textarea,
-  Icon
+  Icon,
+  useToast
 } from '@chakra-ui/react'
 import { BsArrowLeftShort } from 'react-icons/bs'
-import { GetServerSideProps, GetStaticPaths, GetStaticProps } from 'next'
+import { GetServerSideProps } from 'next'
 import { Header } from '../../components/Header'
 import { Button } from '../../components/Form/Button'
 import styles from '../../styles/profile.module.scss'
@@ -96,6 +93,7 @@ export default function ProfileAssociation({ association, city }: DataProps) {
   })
   const { errors } = formState
   const watchAllFields = watch()
+  const toast = useToast()
   useEffect(() => {
     reset({
       name: user?.name,
@@ -110,6 +108,7 @@ export default function ProfileAssociation({ association, city }: DataProps) {
     event.preventDefault()
 
     const data = {
+      ...user,
       name: values.name,
       phone: values.phone,
       email: user.email,
@@ -124,8 +123,36 @@ export default function ProfileAssociation({ association, city }: DataProps) {
       id_association: association.id
     }
 
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    console.log(data)
+    try {
+      const res = await api.post('/donates/create', data)
+
+      if (res.status === 201) {
+        toast({
+          title: `Agendamento feito com sucesso`,
+          status: 'success',
+          isClosable: true,
+          position: 'top-right'
+        })
+        setFormDonate(false)
+      }
+    } catch (err) {
+      if (err.response.status === 409) {
+        toast({
+          title: `Erro no agendamento`,
+          status: 'warning',
+          isClosable: true,
+          position: 'top-right'
+        })
+
+        toast({
+          title: `Erro no agendamento`,
+          status: 'error',
+          isClosable: true,
+          position: 'top-right'
+        })
+        return
+      }
+    }
   }
 
   return (
@@ -291,7 +318,7 @@ export default function ProfileAssociation({ association, city }: DataProps) {
                               placeholder="Cidade"
                               error={errors.city}
                               {...register('city')}
-                              defaultValue={city?.name}
+                              defaultValue={user.address?.city || city?.name}
                             />
                           </GridItem>
                           <GridItem colSpan={2} h="10">
@@ -300,7 +327,7 @@ export default function ProfileAssociation({ association, city }: DataProps) {
                               placeholder="UF"
                               error={errors.uf}
                               {...register('uf')}
-                              defaultValue="MG"
+                              defaultValue={user.address?.uf || 'MG'}
                             />
                           </GridItem>
                         </Grid>

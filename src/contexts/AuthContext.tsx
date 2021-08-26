@@ -14,6 +14,8 @@ type Donor = {
     street: string
     number: string
     district: string
+    city: string
+    uf: string
   }
   password?: string
   url_image: string
