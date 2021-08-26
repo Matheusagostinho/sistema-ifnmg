@@ -68,21 +68,21 @@ type DonorFormData = {
 }
 
 const DonorFormSchema = yup.object().shape({
-  name: yup.string().required('O none é um campo obrigatório'),
-  phone: yup.string().required('O none é um campo obrigatório'),
-  street: yup.string().required('O none é um campo obrigatório'),
-  district: yup.string().required('O none é um campo obrigatório'),
-  number: yup.string().required('O none é um campo obrigatório'),
-  city: yup.string().required('O none é um campo obrigatório'),
-  uf: yup.string().required('O none é um campo obrigatório'),
-  date: yup.string().required('O none é um campo obrigatório'),
-  hour: yup.string().required('O none é um campo obrigatório'),
-  donate: yup.string().required('O none é um campo obrigatório')
+  name: yup.string().required('O nome é um campo obrigatório'),
+  phone: yup.string().required('O telefone é um campo obrigatório'),
+  street: yup.string().required('A Rua é um campo obrigatório'),
+  district: yup.string().required('O bairro é um campo obrigatório'),
+  number: yup.string().required('O numero é um campo obrigatório'),
+  city: yup.string().required('A cidade é um campo obrigatório'),
+  uf: yup.string().required('O estado é um campo obrigatório'),
+  date: yup.string().required('A data é um campo obrigatório'),
+  hour: yup.string().required('O horário é um campo obrigatório'),
+  donate: yup.string().required('O que irá é um campo obrigatório')
 })
 
 export default function ProfileAssociation({ association, city }: DataProps) {
   const [formDonate, setFormDonate] = useState(false)
-  const { user } = useAuth()
+  const { user, setUser } = useAuth()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -95,11 +95,14 @@ export default function ProfileAssociation({ association, city }: DataProps) {
   const watchAllFields = watch()
   const toast = useToast()
   useEffect(() => {
-    console.log(user)
-
     reset({
       name: user?.name,
-      phone: user?.phone
+      phone: user?.phone,
+      street: user?.address.street,
+      district: user?.address.district,
+      number: user?.address.number,
+      city: user?.address.number || city.name,
+      uf: user?.address.number || 'MG'
     })
   }, [user])
 
@@ -125,7 +128,6 @@ export default function ProfileAssociation({ association, city }: DataProps) {
       donate: values.donate,
       id_association: association.id
     }
-    console.log(data)
 
     try {
       const res = await api.post('/donates/create', data)
@@ -138,6 +140,7 @@ export default function ProfileAssociation({ association, city }: DataProps) {
           position: 'top-right'
         })
         setFormDonate(false)
+        setUser(res.data.user)
       }
     } catch (err) {
       if (err.response.status === 409) {

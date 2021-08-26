@@ -26,7 +26,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         address: {
           street: '',
           number: '',
-          district: ''
+          district: '',
+          city: '',
+          uf: ''
         }
       }
       const { insertedId } = await db.collection('donors').insertOne(donor)

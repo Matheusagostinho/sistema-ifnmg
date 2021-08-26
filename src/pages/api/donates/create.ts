@@ -20,7 +20,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       active: true,
       phone: data.phone,
       address: {
-        ...data.address
+        street: data.street,
+        district: data.district,
+        number: data.number,
+        city: data.city,
+        uf: data.uf
       }
     }
     const donate = {
@@ -31,7 +35,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       email: data.email,
       phone: data.phone,
       address: {
-        ...data.address
+        street: data.street,
+        district: data.district,
+        number: data.number,
+        city: data.city,
+        uf: data.uf
       },
       date: data.date,
       hour: data.hour,
@@ -39,16 +47,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       withdrawn: false
     }
 
-    const { id } = data
-    const _id = id
+    const _id = new ObjectId(String(data.id))
 
     const success = await db.collection('donates').insertOne(donate)
 
-    const response = await db
+    const { value } = await db
       .collection('donors')
       .findOneAndUpdate({ _id }, { $set: donor }, { returnDocument: 'after' })
+
     res.status(201).json({
-      user: response
+      user: value
     })
   } else {
     res.status(400).json({ error: 'Wrong request method' })

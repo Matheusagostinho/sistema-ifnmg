@@ -27,6 +27,7 @@ type AuthContextType = {
   signInWithGoogle: () => Promise<void>
   signOut: () => Promise<void>
   fetchDonor: (email: string) => Promise<void>
+  setUser: ({}) => void
 }
 
 type AuthContextProviderProps = {
@@ -74,7 +75,7 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
     try {
       const response = await api.post('/donors/create', data)
       setUser(response.data.donor)
-      console.log(response.data.donor)
+
       if (response.status === 201 && data.method == 'email') {
         toast({
           title: `Cadastro feito com sucesso`,
@@ -117,13 +118,12 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
         method: 'google'
       }
       createDonor(donor)
-      console.log(user)
     }
   }
 
   return (
     <AuthContext.Provider
-      value={{ user, signInWithGoogle, signOut, fetchDonor }}
+      value={{ user, signInWithGoogle, signOut, fetchDonor, setUser }}
     >
       {props.children}
     </AuthContext.Provider>
