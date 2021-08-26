@@ -109,8 +109,6 @@
       input:focus {
         outline: var(--red-500);
       }
-      button {
-      }
     }
 
     p {
@@ -133,6 +131,7 @@
   @media (max-width: 768px) {
     padding-top: 3rem;
     height: 100%;
+    padding-left: 0;
   }
 
   main {
@@ -148,6 +147,9 @@
       align-items: center;
       margin-bottom: 4rem;
       padding-bottom: 2rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      max-width: 90%;
     }
 
     .mainContent {
@@ -210,38 +212,7 @@
     }
     .form {
       max-width: 420px;
-      @media (min-width: 786px) {
-        .locale {
-          display: flex;
-          gap: 8px;
-          input {
-            &:last-child {
-              width: 100px;
-              flex: 1;
-            }
-          }
-        }
-        .locale01 {
-          display: flex;
-          gap: 8px;
-          input {
-            &:last-child {
-              width: 60px;
-              flex: 1;
-            }
-          }
-        }
-        .locale02 {
-          display: flex;
-          gap: 8px;
-          input {
-            &:last-child {
-              width: 156px;
-              flex: 1;
-            }
-          }
-        }
-      }
+
       a {
         margin-top: 2rem;
         display: flex;
@@ -264,8 +235,8 @@
     .suggestions {
       background-color: var(--gray-50);
       width: 100%;
-      max-width: 320px;
-      margin-top: -8px;
+      max-width: 314px;
+      margin-top: -1px;
       padding: 0;
       max-height: 280px;
       overflow-y: auto;
@@ -273,6 +244,9 @@
       display: block;
       position: absolute;
       border-radius: 3px;
+      @media (max-width: 425px) {
+        max-width: 265px;
+      }
     }
 
     .suggestions {
@@ -282,7 +256,7 @@
         display: block;
         z-index: 1000;
         width: calc(100%);
-
+        width: 100%;
         height: 42px;
         cursor: pointer;
         background-color: var(--gray-50);

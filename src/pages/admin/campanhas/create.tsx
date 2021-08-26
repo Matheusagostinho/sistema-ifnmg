@@ -1,3 +1,6 @@
+import { GetServerSideProps } from 'next'
+import { getSession } from 'next-auth/client'
+
 import {
   Box,
   Button,
@@ -139,4 +142,19 @@ export default function CreateUser() {
       </Flex>
     </LayoutOutAdmin>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async context => {
+  const session = await getSession({ req: context.req })
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/admin',
+        permanent: false
+      }
+    }
+  }
+  return {
+    props: { session }
+  }
 }

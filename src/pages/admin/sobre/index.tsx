@@ -440,11 +440,7 @@ export default function CreateUser() {
 
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req })
-  const email = session?.user.email
-  const { db } = await connectToDatabase()
-  const response = await db.collection('associations').findOne({ email })
-
-  if (!session || !response) {
+  if (!session) {
     return {
       redirect: {
         destination: '/admin',

@@ -1,3 +1,6 @@
+import { GetServerSideProps } from 'next'
+import { getSession } from 'next-auth/client'
+
 import {
   Link as ChakraLink,
   Box,
@@ -177,13 +180,17 @@ export default function campaignList() {
   )
 }
 
-// export const getServerSideProps: GetServerSideProps = async () => {
-//   const { users, totalCount } = await getUsers(1)
-
-//   return {
-//     props: {
-//       users,
-//       totalCount
-//     }
-//   }
-// }
+export const getServerSideProps: GetServerSideProps = async context => {
+  const session = await getSession({ req: context.req })
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/admin',
+        permanent: false
+      }
+    }
+  }
+  return {
+    props: { session }
+  }
+}

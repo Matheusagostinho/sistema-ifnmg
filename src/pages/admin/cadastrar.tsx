@@ -23,7 +23,7 @@ import router, { useRouter } from 'next/router'
 
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { SubmitHandler, useForm, useWatch } from 'react-hook-form'
+import { SubmitHandler, useForm, Controller } from 'react-hook-form'
 import { api } from 'services/api'
 
 type SignInFormData = {
@@ -81,7 +81,8 @@ export default function Register() {
     clearErrors,
     setValue,
     watch,
-    reset
+    reset,
+    control
   } = useForm({
     resolver: yupResolver(signInFormSchema)
   })
@@ -207,7 +208,12 @@ export default function Register() {
           </SlideFade>
 
           <SlideFade in={true} offsetY="20px" className={styles.form}>
-            <VStack as="form" onSubmit={handleSubmit(handleSignIn)} spacing="2">
+            <VStack
+              as="form"
+              onSubmit={handleSubmit(handleSignIn)}
+              spacing="2"
+              w="100%"
+            >
               <Input
                 type="text"
                 placeholder="Nome da Associação"
@@ -262,15 +268,26 @@ export default function Register() {
               <Box display="flex">
                 <Grid templateColumns="repeat(8, 1fr)" gap={2} mt="2">
                   <GridItem colSpan={6} h="10">
-                    <Input
+                    {/* <Input
                       type="text"
                       placeholder="Cidade"
                       error={errors.city}
                       {...register('city')}
-                      value={watchAllFields.city}
-                      onFocus={cleanOldCity}
+                      defaultValue={watchAllFields.city}
+                    /> */}
+                    <Controller
+                      render={({ field }) => (
+                        <Input
+                          error={errors.city}
+                          {...field}
+                          placeholder="Cidade"
+                        />
+                      )}
+                      name="city"
+                      control={control}
+                      defaultValue={watchAllFields.city}
                     />
-                    <div className={styles.suggestions}>
+                    <Box className={styles.suggestions} maxW="375px">
                       {cities
                         .filter(name => {
                           if (watchAllFields.city === '') {
@@ -304,15 +321,16 @@ export default function Register() {
                             </button>
                           </div>
                         ))}
-                    </div>
+                    </Box>
                   </GridItem>
                   <GridItem colSpan={2} h="10">
-                    <Input
-                      type="text"
-                      placeholder="UF"
-                      error={errors.uf}
-                      {...register('uf')}
-                      value={watchAllFields.uf}
+                    <Controller
+                      render={({ field }) => (
+                        <Input error={errors.uf} {...field} placeholder="UF" />
+                      )}
+                      name="uf"
+                      control={control}
+                      defaultValue={watchAllFields.uf}
                     />
                   </GridItem>
                 </Grid>

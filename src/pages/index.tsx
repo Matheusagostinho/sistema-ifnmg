@@ -41,13 +41,16 @@ export default function Home({ cities }: HomeProps) {
       if (item.name === city) return item.id
     })
     setCookie(undefined, 'ajudaai.cityId', id, {
-      maxAge: 60 * 60 * 24 * 2 // 2 days
+      maxAge: 60 * 60 * 24 * 2, // 2 days
+      path: '/'
     })
     setCookie(undefined, 'ajudaai.cityName', name, {
-      maxAge: 60 * 60 * 24 * 2 // 2 days
+      maxAge: 60 * 60 * 24 * 2, // 2 days
+      path: '/'
     })
     setCookie(undefined, 'ajudaai.citySlug', slug, {
-      maxAge: 60 * 60 * 24 * 2 // 2 days
+      maxAge: 60 * 60 * 24 * 2, // 2 days
+      path: '/'
     })
     setIsSubmitting(true)
     await router.push(`/associations/${slug}`)

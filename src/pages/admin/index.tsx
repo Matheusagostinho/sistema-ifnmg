@@ -139,19 +139,8 @@ export default function Portal() {
 
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req })
-  console.log(session)
-  const email = session?.user.email
-  const { db } = await connectToDatabase()
-  const response = await db.collection('associations').findOne({ email })
-  console.log(response)
 
-  if (session && !response) {
-    return {
-      props: { session }
-    }
-  }
-
-  if (session && response) {
+  if (session) {
     return {
       redirect: {
         destination: '/admin/dashboard',
@@ -159,6 +148,25 @@ export async function getServerSideProps(context) {
       }
     }
   }
+
+  // const email = session?.user.email
+  // const { db } = await connectToDatabase()
+  // const response = await db.collection('associations').findOne({ email })
+
+  // if (session && !response) {
+  //   return {
+  //     props: { session }
+  //   }
+  // }
+
+  // if (session && response) {
+  //   return {
+  //     redirect: {
+  //       destination: '/admin/dashboard',
+  //       permanent: false
+  //     }
+  //   }
+  // }
   return {
     props: { session }
   }

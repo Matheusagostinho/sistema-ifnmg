@@ -45,9 +45,9 @@ export function Header({ children }: HeaderProps) {
     lg: true
   })
   function toReplaceCity() {
-    destroyCookie(undefined, 'ajudaai.cityId')
-    destroyCookie(undefined, 'ajudaai.citySlug')
-    destroyCookie(undefined, 'ajudaai.cityName')
+    destroyCookie(undefined, 'ajudaai.cityId', { path: '/' })
+    destroyCookie(undefined, 'ajudaai.citySlug', { path: '/' })
+    destroyCookie(undefined, 'ajudaai.cityName', { path: '/' })
     router.push('/')
   }
 
