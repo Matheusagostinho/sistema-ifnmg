@@ -98,7 +98,7 @@ export function Header({ children }: HeaderProps) {
             <Avatar size="md" name={user.name} src={user.url_image} />
 
             {isWideVersion && (
-              <Box mr="4" textAlign="left">
+              <Box mx="2" textAlign="left">
                 <Text color="black">{user.name}</Text>
                 <Text color="gray.400" fontSize="small">
                   {user.email}

@@ -407,7 +407,7 @@ export default function ProfileAssociation({ association, city }: DataProps) {
                 justifyContent="center"
                 onClick={() => setFormDonate(false)}
                 fontSize="1.2rem"
-                pl={['6rem']}
+                pl={[0, 0, '10rem', '7rem']}
                 fontWeight="bold"
               >
                 <Icon as={BsArrowLeftShort} fontSize="1.4rem" color="red.500" />
@@ -415,7 +415,12 @@ export default function ProfileAssociation({ association, city }: DataProps) {
               </Link>
             </>
           ) : (
-            <Button type="button" onClick={() => setFormDonate(true)} w="400px">
+            <Button
+              type="button"
+              onClick={() => setFormDonate(true)}
+              w="400px"
+              ml={[0, 0, '10rem', '7rem']}
+            >
               Doe sem sair de casa :{')'}
             </Button>
           )}
