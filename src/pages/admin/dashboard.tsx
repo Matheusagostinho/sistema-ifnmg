@@ -1,5 +1,3 @@
-import dynamic from 'next/dynamic'
-
 import {
   Link as ChakraLink,
   Box,
@@ -16,7 +14,6 @@ import {
   Text,
   Th,
   Thead,
-  theme,
   Tr,
   useBreakpointValue,
   Tbody,
@@ -24,41 +21,75 @@ import {
 } from '@chakra-ui/react'
 import { Header } from '../../components/HeaderAdmin'
 import { Sidebar } from '../../components/Sidebar'
-import Link from 'next/link'
-import {
-  RiAddLine,
-  RiCheckboxCircleLine,
-  RiCloseCircleLine,
-  RiPencilLine
-} from 'react-icons/ri'
-import { useState } from 'react'
-import { useUsers } from 'services/hooks/useUsers'
+import { RiCheckboxCircleLine } from 'react-icons/ri'
+import { useEffect, useState } from 'react'
+import { useDonates } from 'services/hooks/useDonates'
 import { queryClient } from 'services/queryClient'
 import { api } from 'services/api'
 import { Pagination } from 'components/Pagination'
-import { getSession, signOut } from 'next-auth/client'
+import { getSession } from 'next-auth/client'
 import connectToDatabase from 'utils/database'
+import { useMutation } from 'react-query'
+import { database } from 'services/firebase'
 
-export default function Dashboard() {
+type FirebaseDonations = Record<
+  string,
+  {
+    donates: Record<
+      string,
+      {
+        isNewDonateId: string
+      }
+    >
+  }
+>
+
+export default function Dashboard({ id, numberOfFamily }) {
   const [page, setPage] = useState(1)
+
   //refetch - para fazer o refetch dos dados
-  const { data, isLoading, isFetching, error } = useUsers(page, {
+  const { data, isLoading, isFetching, error, refetch } = useDonates(id, page, {
     // initialData:
   })
 
-  async function handlePrefetchUser(userId: string) {
-    await queryClient.prefetchQuery(
-      ['user', userId],
-      async () => {
-        const res = await api.get(`users/${userId}`)
+  const donateModify = useMutation(
+    async (id_donate: string) => {
+      const res = await api.post(`donates/updated/${id_donate}`, {})
 
-        return res.data
-      },
-      {
-        staleTime: 1000 * 60 * 10 // 10 minutos
+      return res.data.user
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('donates')
+        refetch()
       }
-    )
+    }
+  )
+  const makeAsWithdrawn = async (id_donate: string) => {
+    console.log(id_donate)
+    const data = await donateModify.mutateAsync(id_donate)
+    console.log(data)
+    refetch()
   }
+
+  const [newDonate, setNewDonate] = useState(0)
+
+  useEffect(() => {
+    const associationRef = database.ref(`associations/${id}`)
+
+    associationRef.on('value', room => {
+      const databaseRoom = room.val()
+      const firebaseQuestions: FirebaseDonations = databaseRoom?.donates ?? {}
+      const count = Object.entries(firebaseQuestions).length
+      setNewDonate(count)
+    })
+
+    refetch()
+
+    return () => {
+      associationRef.off('value')
+    }
+  }, [newDonate])
 
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -99,7 +130,7 @@ export default function Dashboard() {
                 Doações a Receber
               </Text>
               <Heading size="3xl" mb="0">
-                15
+                {data?.donates.length}
               </Heading>
             </Box>
             <Box
@@ -115,10 +146,10 @@ export default function Dashboard() {
               alignItems="center"
             >
               <Text fontSize="lg" mb="2" color="gray.400">
-                Doações Recebidas
+                Total de Doações
               </Text>
               <Heading size="3xl" mb="0">
-                237
+                {newDonate}
               </Heading>
             </Box>
             <Box
@@ -137,7 +168,7 @@ export default function Dashboard() {
                 Doadores
               </Text>
               <Heading size="3xl" mb="0">
-                167
+                {data.totalDonors}
               </Heading>
             </Box>
             <Box
@@ -156,7 +187,7 @@ export default function Dashboard() {
                 Famílias Auxiliadas
               </Text>
               <Heading size="3xl" mb="0">
-                62
+                {numberOfFamily}
               </Heading>
             </Box>
           </SimpleGrid>
@@ -197,7 +228,7 @@ export default function Dashboard() {
               <Flex justify="center">
                 <Text>Falha ao obter dados</Text>
               </Flex>
-            ) : (
+            ) : data.donates.length > 0 ? (
               <>
                 <Table colorScheme="blackAlpha" p="2">
                   <Thead>
@@ -213,9 +244,9 @@ export default function Dashboard() {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {data.users.map(user => {
+                    {data.donates.map(donate => {
                       return (
-                        <Tr key={user.id}>
+                        <Tr key={donate?._id}>
                           {isWideVersion && (
                             <Td px={['4', '4', '6']}>
                               <Checkbox colorScheme="red" />
@@ -223,18 +254,15 @@ export default function Dashboard() {
                           )}
                           <Td>
                             <Box>
-                              <ChakraLink
-                                color="red.500"
-                                onMouseEnter={() => handlePrefetchUser(user.id)}
-                              >
-                                <Text fontWeight="bold">{user.name}</Text>
+                              <ChakraLink color="red.500">
+                                <Text fontWeight="bold">{donate?.name}</Text>
                               </ChakraLink>
                               <Text fontSize="sm" color="gray.400">
-                                {user.email}
+                                {donate?.email}
                               </Text>
                             </Box>
                           </Td>
-                          {isWideVersion && <Td>{user.createdAt}</Td>}
+                          {isWideVersion && <Td>{donate?.date}</Td>}
                           {isWideVersion ? (
                             <Td>
                               <Flex
@@ -247,6 +275,8 @@ export default function Dashboard() {
                                   fontSize="sm"
                                   colorScheme="green"
                                   mr="1"
+                                  type="button"
+                                  onClick={() => makeAsWithdrawn(donate._id)}
                                   leftIcon={
                                     <Icon
                                       as={RiCheckboxCircleLine}
@@ -272,6 +302,7 @@ export default function Dashboard() {
                                   fontSize="sm"
                                   colorScheme="green"
                                   mr="1"
+                                  onClick={() => makeAsWithdrawn(donate._id)}
                                   borderRadius="6"
                                   icon={
                                     <Icon
@@ -288,31 +319,29 @@ export default function Dashboard() {
                     })}
                   </Tbody>
                 </Table>
-                <Pagination
-                  totalCountOfRegisters={data.totalCount}
-                  currentPage={page}
-                  onPageChange={setPage}
-                />
               </>
+            ) : (
+              <Text> não possui doações agendadas</Text>
             )}
           </Box>
-          <Box
-            flex="1"
-            bg="gray.1"
-            borderRadius={8}
-            p={['4', '6', '8']}
-            marginLeft={['0', '0', '0', '230px', '250px']}
-            borderColor="gray.300"
-            borderWidth="1px"
-          >
-            <Flex mb="8" justify="space-between" align="center">
-              <Heading size="lg" fontWeight="normal">
-                Doações recebidas
-                {!isLoading && isFetching && (
-                  <Spinner size="sm" color="gray.500" ml="4" />
-                )}
-              </Heading>
-              {/* <Link href="/admin/doadores/create" passHref>
+          {data?.completedDonates && (
+            <Box
+              flex="1"
+              bg="gray.1"
+              borderRadius={8}
+              p={['4', '6', '8']}
+              marginLeft={['0', '0', '0', '230px', '250px']}
+              borderColor="gray.300"
+              borderWidth="1px"
+            >
+              <Flex mb="8" justify="space-between" align="center">
+                <Heading size="lg" fontWeight="normal">
+                  Doações recebidas
+                  {!isLoading && isFetching && (
+                    <Spinner size="sm" color="gray.500" ml="4" />
+                  )}
+                </Heading>
+                {/* <Link href="/admin/doadores/create" passHref>
                 <Button
                   as="a"
                   size="sm"
@@ -323,55 +352,53 @@ export default function Dashboard() {
                   Agendar doação
                 </Button>
               </Link> */}
-            </Flex>
-            {isLoading ? (
-              <Flex justify="center">
-                <Spinner size="md" color="gray.500" />
               </Flex>
-            ) : error ? (
-              <Flex justify="center">
-                <Text>Falha ao obter dados</Text>
-              </Flex>
-            ) : (
-              <>
-                <Table colorScheme="blackAlpha" p="2">
-                  <Thead>
-                    <Tr>
-                      <Th>Doadores</Th>
-                      <Th>Data da doação</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {data.users.map(user => {
-                      return (
-                        <Tr key={user.id}>
-                          <Td>
-                            <Box>
-                              <ChakraLink
-                                color="red.500"
-                                onMouseEnter={() => handlePrefetchUser(user.id)}
-                              >
-                                <Text fontWeight="bold">{user.name}</Text>
-                              </ChakraLink>
-                              <Text fontSize="sm" color="gray.400">
-                                {user.email}
-                              </Text>
-                            </Box>
-                          </Td>
-                          <Td>{user.createdAt}</Td>
-                        </Tr>
-                      )
-                    })}
-                  </Tbody>
-                </Table>
-                <Pagination
-                  totalCountOfRegisters={data.totalCount}
-                  currentPage={page}
-                  onPageChange={setPage}
-                />
-              </>
-            )}
-          </Box>
+              {isLoading ? (
+                <Flex justify="center">
+                  <Spinner size="md" color="gray.500" />
+                </Flex>
+              ) : error ? (
+                <Flex justify="center">
+                  <Text>Falha ao obter dados</Text>
+                </Flex>
+              ) : (
+                <>
+                  <Table colorScheme="blackAlpha" p="2">
+                    <Thead>
+                      <Tr>
+                        <Th>Doadores</Th>
+                        <Th>Data da doação</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {data.completedDonates.map(donate => {
+                        return (
+                          <Tr key={donate?._id}>
+                            <Td>
+                              <Box>
+                                <ChakraLink color="red.500">
+                                  <Text fontWeight="bold">{donate?.name}</Text>
+                                </ChakraLink>
+                                <Text fontSize="sm" color="gray.400">
+                                  {donate?.email}
+                                </Text>
+                              </Box>
+                            </Td>
+                            <Td>{donate?.date}</Td>
+                          </Tr>
+                        )
+                      })}
+                    </Tbody>
+                  </Table>
+                  <Pagination
+                    totalCountOfRegisters={data.totalCount}
+                    currentPage={page}
+                    onPageChange={setPage}
+                  />
+                </>
+              )}
+            </Box>
+          )}
         </Stack>
       </Flex>
     </Flex>
@@ -390,9 +417,12 @@ export async function getServerSideProps(context) {
     }
   }
 
-  // const email = session?.user.email
-  // const { db } = await connectToDatabase()
-  // const response = await db.collection('associations').findOne({ email })
+  const email = session?.user.email
+  const { db } = await connectToDatabase()
+  const response = await db.collection('associations').findOne({ email })
+
+  const id = String(response._id)
+  const numberOfFamily = response.people_assisted
 
   // if (!session || !response) {
   //   return {
@@ -403,6 +433,6 @@ export async function getServerSideProps(context) {
   //   }
   // }
   return {
-    props: { session }
+    props: { id, numberOfFamily }
   }
 }

@@ -30,6 +30,7 @@ import { FaFacebook, FaInstagram } from 'react-icons/fa'
 import { parseCookies } from 'nookies'
 import { useAuth } from 'hooks/useAuth'
 import { ModalLogin } from 'components/ModalLogin'
+import { database } from '../../services/firebase'
 
 type Association = {
   id: string
@@ -141,9 +142,14 @@ export default function ProfileAssociation({ association, city }: DataProps) {
         })
         setFormDonate(false)
         setUser(res.data.user)
+        console.log(res)
+
+        await database
+          .ref(`associations/${association.id}/donates`)
+          .push({ isNewDonateId: res.data.donate.insertedId })
       }
     } catch (err) {
-      if (err.response.status === 409) {
+      if (err.response?.status === 409) {
         toast({
           title: `Erro no agendamento`,
           status: 'warning',

@@ -56,7 +56,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       .findOneAndUpdate({ _id }, { $set: donor }, { returnDocument: 'after' })
 
     res.status(201).json({
-      user: value
+      user: value,
+      donate: success
     })
   } else {
     res.status(400).json({ error: 'Wrong request method' })

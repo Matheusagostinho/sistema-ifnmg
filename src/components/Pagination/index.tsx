@@ -25,7 +25,15 @@ export function Pagination({
   currentPage = 1,
   onPageChange
 }: PaginationProps) {
-  const lastPage = Math.floor(totalCountOfRegisters / registerPerPage)
+  const lastPage = Math.ceil(totalCountOfRegisters / registerPerPage)
+  const restPage = Math.ceil(totalCountOfRegisters % registerPerPage)
+
+  const initialItem =
+    currentPage === 1 ? 1 : (currentPage - 1) * registerPerPage
+  const finlayItem =
+    currentPage === 1 && totalCountOfRegisters > registerPerPage
+      ? currentPage * registerPerPage
+      : currentPage * registerPerPage - (registerPerPage - restPage)
 
   const previousPages =
     currentPage > 1
@@ -49,7 +57,8 @@ export function Pagination({
       spacing="6"
     >
       <Box>
-        <strong>0</strong> - <strong>10</strong> de <strong>100</strong>
+        <strong>{initialItem}</strong> - <strong>{finlayItem}</strong> de{' '}
+        <strong>{totalCountOfRegisters}</strong>
       </Box>
       <Stack direction="row" spacing="2">
         {currentPage > 1 + siblingsCount && (

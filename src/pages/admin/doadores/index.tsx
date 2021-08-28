@@ -46,7 +46,7 @@ type UserListProps = {
   users: User[]
   totalCount: number
 }
-export default function UserList(s) {
+export default function UserList() {
   const [page, setPage] = useState(1)
   //refetch - para fazer o refetch dos dados
   const { data, isLoading, isFetching, error } = useUsers(page, {

@@ -19,15 +19,15 @@ export function SideBarNav() {
         <NavLink icon={BiCalendarCheck} href="/admin/dashboard">
           Agendamentos
         </NavLink>
-        <NavLink icon={RiContactsLine} href="/admin/doadores">
+        {/* <NavLink icon={RiContactsLine} href="/admin/doadores">
           Doadores
-        </NavLink>
+        </NavLink> */}
       </NavSection>
 
       <NavSection title="Associação">
-        <NavLink icon={RiStarLine} href="/admin/campanhas">
+        {/* <NavLink icon={RiStarLine} href="/admin/campanhas">
           Campanhas
-        </NavLink>
+        </NavLink> */}
         <NavLink icon={FaRegAddressCard} href="/admin/sobre">
           Sobre
         </NavLink>

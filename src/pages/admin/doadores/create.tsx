@@ -61,7 +61,7 @@ export default function CreateUser() {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('users')
+        queryClient.invalidateQueries('donates')
       }
     }
   )
