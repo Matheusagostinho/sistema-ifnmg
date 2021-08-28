@@ -130,7 +130,7 @@ export default function Dashboard({ id, numberOfFamily }) {
                 Doações a Receber
               </Text>
               <Heading size="3xl" mb="0">
-                {data?.donates.length}
+                {data?.donates.length || 0}
               </Heading>
             </Box>
             <Box
@@ -168,7 +168,7 @@ export default function Dashboard({ id, numberOfFamily }) {
                 Doadores
               </Text>
               <Heading size="3xl" mb="0">
-                {data.totalDonors}
+                {data?.totalDonors || 0}
               </Heading>
             </Box>
             <Box
