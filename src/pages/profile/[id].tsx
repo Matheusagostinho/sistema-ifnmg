@@ -31,6 +31,12 @@ import { parseCookies } from 'nookies'
 import { useAuth } from 'hooks/useAuth'
 import { ModalLogin } from 'components/ModalLogin'
 import { database } from '../../services/firebase'
+import {
+  RiCalendar2Line,
+  RiCalendarFill,
+  RiCalendarLine,
+  RiCloseCircleLine
+} from 'react-icons/ri'
 
 type Association = {
   id: string
@@ -366,11 +372,13 @@ export default function ProfileAssociation({ association, city }: DataProps) {
                       spacing={['2', '4']}
                       maxWidth="400px"
                       mt={['2', '0']}
+                      w="100%"
+                      minHeight="330px"
                     >
                       <h3>Data de Retirada</h3>
                       <Box display="flex" w="100%">
                         <Grid templateColumns="repeat(4, 1fr)" gap={2}>
-                          <GridItem colSpan={2} h="10">
+                          <GridItem colSpan={2} h="10" position="relative">
                             <Input
                               w="100%"
                               type="date"
@@ -379,16 +387,35 @@ export default function ProfileAssociation({ association, city }: DataProps) {
                               error={errors.date}
                               {...register('date')}
                             />
+                            {!isWideVersion && (
+                              <Icon
+                                fontSize="20px"
+                                as={RiCalendarLine}
+                                position="absolute"
+                                top="12px"
+                                right="14px"
+                              />
+                            )}
                           </GridItem>
-                          <GridItem colSpan={2} h="10">
+                          <GridItem colSpan={2} h="10" position="relative">
                             <Input
                               w="100%"
                               type="time"
                               name="hour"
                               placeholder="--:--"
                               defaultValue={nowHour}
+                              {...register('hour')}
                               error={errors.hour}
                             />
+                            {!isWideVersion && (
+                              <Icon
+                                fontSize="20px"
+                                as={RiCloseCircleLine}
+                                position="absolute"
+                                top="12px"
+                                right="14px"
+                              />
+                            )}
                           </GridItem>
                         </Grid>
                       </Box>
