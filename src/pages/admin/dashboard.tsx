@@ -17,13 +17,15 @@ import {
   Tr,
   useBreakpointValue,
   Tbody,
-  IconButton
+  IconButton,
+  Avatar,
+  useDisclosure
 } from '@chakra-ui/react'
 import { Header } from '../../components/HeaderAdmin'
 import { Sidebar } from '../../components/Sidebar'
 import { RiCheckboxCircleLine } from 'react-icons/ri'
 import { useEffect, useState } from 'react'
-import { useDonates } from 'services/hooks/useDonates'
+import { Donate, useDonates } from 'services/hooks/useDonates'
 import { queryClient } from 'services/queryClient'
 import { api } from 'services/api'
 import { Pagination } from 'components/Pagination'
@@ -31,6 +33,7 @@ import { getSession } from 'next-auth/client'
 import connectToDatabase from 'utils/database'
 import { useMutation } from 'react-query'
 import { database } from 'services/firebase'
+import { ModalDonate } from 'components/ModalDonate'
 
 type FirebaseDonations = Record<
   string,
@@ -46,7 +49,10 @@ type FirebaseDonations = Record<
 
 export default function Dashboard({ id, numberOfFamily }) {
   const [page, setPage] = useState(1)
-
+  const [donateInformation, setDonateInformation] = useState<Donate>(
+    {} as Donate
+  )
+  const { isOpen, onOpen, onClose } = useDisclosure()
   //refetch - para fazer o refetch dos dados
   const { data, isLoading, isFetching, error, refetch } = useDonates(id, page, {
     // initialData:
@@ -95,6 +101,11 @@ export default function Dashboard({ id, numberOfFamily }) {
     base: false,
     lg: true
   })
+
+  function openModalDonate(donate: Donate) {
+    setDonateInformation(donate)
+    onOpen()
+  }
   return (
     <Flex direction="column" h="100vh">
       <Header />
@@ -202,23 +213,12 @@ export default function Dashboard({ id, numberOfFamily }) {
             borderWidth="1px"
           >
             <Flex mb="8" justify="space-between" align="center">
-              <Heading size="lg" fontWeight="normal">
+              <Heading size="lg" fontWeight="normal" ml="2">
                 Doações a receber
                 {!isLoading && isFetching && (
                   <Spinner size="sm" color="gray.500" ml="4" />
                 )}
               </Heading>
-              {/* <Link href="/admin/doadores/create" passHref>
-                <Button
-                  as="a"
-                  size="sm"
-                  fontSize="sm"
-                  colorScheme="red"
-                  leftIcon={<Icon as={RiAddLine} fontSize="20" />}
-                >
-                  Agendar doação
-                </Button>
-              </Link> */}
             </Flex>
             {isLoading ? (
               <Flex justify="center">
@@ -230,17 +230,19 @@ export default function Dashboard({ id, numberOfFamily }) {
               </Flex>
             ) : data.donates.length > 0 ? (
               <>
-                <Table colorScheme="blackAlpha" p="2">
+                <Table colorScheme="blackAlpha">
                   <Thead>
                     <Tr>
                       {isWideVersion && (
-                        <Th px={['4', '4', '6']} color="gray.300" width="8">
-                          <Checkbox colorScheme="red" />
-                        </Th>
+                        <Th
+                          px={['4', '4', '6']}
+                          color="gray.300"
+                          width="3"
+                        ></Th>
                       )}
                       <Th>Doadores</Th>
                       {isWideVersion && <Th>Data da retirada</Th>}
-                      <Th width="5"></Th>
+                      <Th width="3"></Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -249,22 +251,45 @@ export default function Dashboard({ id, numberOfFamily }) {
                         <Tr key={donate?._id}>
                           {isWideVersion && (
                             <Td px={['4', '4', '6']}>
-                              <Checkbox colorScheme="red" />
+                              <Avatar
+                                src={donate.url_image}
+                                name={donate.name}
+                              />
                             </Td>
                           )}
                           <Td>
                             <Box>
-                              <ChakraLink color="red.500">
+                              <ChakraLink
+                                color="red.500"
+                                onClick={() => openModalDonate(donate)}
+                              >
                                 <Text fontWeight="bold">{donate?.name}</Text>
                               </ChakraLink>
                               <Text fontSize="sm" color="gray.400">
-                                {donate?.email}
+                                {donate?.address.street}...
                               </Text>
                             </Box>
                           </Td>
-                          {isWideVersion && <Td>{donate?.date}</Td>}
-                          {isWideVersion ? (
+
+                          {isWideVersion && (
                             <Td>
+                              <Box
+                                display={['column', 'flex']}
+                                alignItems="center"
+                              >
+                                {donate?.date}
+                                <Box display="flex">
+                                  <Text mx="1" color="gray.400">
+                                    às
+                                  </Text>
+                                  {donate.hour}h
+                                </Box>
+                              </Box>
+                            </Td>
+                          )}
+
+                          {isWideVersion ? (
+                            <Td px={['1', '2']}>
                               <Flex
                                 flexDirection="row"
                                 justifyContent="flex-end"
@@ -277,6 +302,7 @@ export default function Dashboard({ id, numberOfFamily }) {
                                   mr="1"
                                   type="button"
                                   onClick={() => makeAsWithdrawn(donate._id)}
+                                  cursor="pointer"
                                   leftIcon={
                                     <Icon
                                       as={RiCheckboxCircleLine}
@@ -289,13 +315,14 @@ export default function Dashboard({ id, numberOfFamily }) {
                               </Flex>
                             </Td>
                           ) : (
-                            <Td px="2">
+                            <Td px="1">
                               <Flex
                                 flexDirection="row"
                                 justifyContent="flex-end"
                                 w="100%"
                               >
                                 <IconButton
+                                  cursor="pointer"
                                   aria-label="Retirado"
                                   as="a"
                                   size="sm"
@@ -321,7 +348,7 @@ export default function Dashboard({ id, numberOfFamily }) {
                 </Table>
               </>
             ) : (
-              <Text> não possui doações agendadas</Text>
+              <Text> Não possui doações agendadas</Text>
             )}
           </Box>
           {data?.completedDonates && (
@@ -401,6 +428,12 @@ export default function Dashboard({ id, numberOfFamily }) {
           )}
         </Stack>
       </Flex>
+      <ModalDonate
+        makeAsWithdrawn={makeAsWithdrawn}
+        isOpen={isOpen}
+        onClose={onClose}
+        infoDonate={donateInformation}
+      />
     </Flex>
   )
 }

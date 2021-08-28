@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions, UseQueryResult } from 'react-query'
 import { api } from '../api'
 
-type Donates = {
+export type Donate = {
   _id: string
   name: string
   email: string
@@ -21,8 +21,8 @@ type Donates = {
 }
 
 type GetUsersResponse = {
-  completedDonates: Donates[]
-  donates: Donates[]
+  completedDonates: Donate[]
+  donates: Donate[]
   totalCount: number
   totalDonors: number
 }

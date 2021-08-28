@@ -31,12 +31,8 @@ import { parseCookies } from 'nookies'
 import { useAuth } from 'hooks/useAuth'
 import { ModalLogin } from 'components/ModalLogin'
 import { database } from '../../services/firebase'
-import {
-  RiCalendar2Line,
-  RiCalendarFill,
-  RiCalendarLine,
-  RiCloseCircleLine
-} from 'react-icons/ri'
+import { FiClock } from 'react-icons/fi'
+import { BiCalendarAlt } from 'react-icons/bi'
 
 type Association = {
   id: string
@@ -377,7 +373,7 @@ export default function ProfileAssociation({ association, city }: DataProps) {
                     >
                       <h3>Data de Retirada</h3>
                       <Box display="flex" w="100%">
-                        <Grid templateColumns="repeat(4, 1fr)" gap={2}>
+                        <Grid templateColumns="repeat(4, 1fr)" gap={2} w="100%">
                           <GridItem colSpan={2} h="10" position="relative">
                             <Input
                               w="100%"
@@ -390,7 +386,7 @@ export default function ProfileAssociation({ association, city }: DataProps) {
                             {!isWideVersion && (
                               <Icon
                                 fontSize="20px"
-                                as={RiCalendarLine}
+                                as={BiCalendarAlt}
                                 position="absolute"
                                 top="12px"
                                 right="14px"
@@ -410,7 +406,7 @@ export default function ProfileAssociation({ association, city }: DataProps) {
                             {!isWideVersion && (
                               <Icon
                                 fontSize="20px"
-                                as={RiCloseCircleLine}
+                                as={FiClock}
                                 position="absolute"
                                 top="12px"
                                 right="14px"
