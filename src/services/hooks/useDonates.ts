@@ -32,6 +32,7 @@ export async function getDonates(
   page = 1
 ): Promise<GetUsersResponse> {
   const { data } = await api.get(`donates/all/${id}`)
+
   const per_page = 10
   const allDonors = data.reduce((object, item) => {
     if (!object[item.email]) {
@@ -43,40 +44,38 @@ export async function getDonates(
   }, {})
   const totalDonors = Object.keys(allDonors).length
 
-  const dataFormatted = data.map(donate => {
-    return {
-      _id: donate._id,
-      name: donate.name,
-      email: donate.email,
+  const dataFormatted =
+    data.map(donate => {
+      return {
+        _id: donate._id,
+        name: donate.name,
+        email: donate.email,
 
-      url_image: donate.url_image,
-      phone: donate.phone,
-      address: {
-        street: donate.address.street,
-        district: donate.address.district,
-        number: donate.address.number,
-        city: donate.address.city,
-        uf: donate.address.uf
-      },
-      date: new Date(donate.date).toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-      }),
-      hour: donate.hour,
-      donate: donate.donate,
-      withdrawn: donate.withdrawn
-    }
-  })
+        url_image: donate.url_image,
+        phone: donate.phone,
+        address: {
+          street: donate.address.street,
+          district: donate.address.district,
+          number: donate.address.number,
+          city: donate.address.city,
+          uf: donate.address.uf
+        },
+        date: new Date(donate.date).toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        }),
+        hour: donate.hour,
+        donate: donate.donate,
+        withdrawn: donate.withdrawn
+      }
+    }) || null
 
-  const donates = dataFormatted.filter(donate =>
-    !donate.withdrawn ? true : false
-  )
+  const donates =
+    dataFormatted.filter(donate => (!donate.withdrawn ? true : false)) || null
   const completedDonatesAll = dataFormatted.filter(donate =>
     donate.withdrawn ? true : false
   )
-
-  console.log(donates[2].date)
 
   const totalCount = completedDonatesAll.length
 
