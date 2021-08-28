@@ -31,7 +31,6 @@ import { parseCookies } from 'nookies'
 import { useAuth } from 'hooks/useAuth'
 import { ModalLogin } from 'components/ModalLogin'
 import { database } from '../../services/firebase'
-import { RiCalendarTodoLine } from 'react-icons/ri'
 
 type Association = {
   id: string
@@ -167,6 +166,22 @@ export default function ProfileAssociation({ association, city }: DataProps) {
       }
     }
   }
+
+  const day = new Date().toLocaleDateString('pt-BR', {
+    day: '2-digit'
+  })
+  const month = new Date().toLocaleDateString('pt-BR', {
+    month: '2-digit'
+  })
+  const year = new Date().toLocaleDateString('pt-BR', {
+    year: 'numeric'
+  })
+  const nowDate = [year, month, day].join('-')
+  let nowHour = new Date().toLocaleDateString('pt-BR', {
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+  nowHour = nowHour.slice(11, 16)
 
   return (
     <>
@@ -360,6 +375,7 @@ export default function ProfileAssociation({ association, city }: DataProps) {
                               w="100%"
                               type="date"
                               placeholder="dd/mm/aaaa"
+                              defaultValue={nowDate}
                               error={errors.date}
                               {...register('date')}
                             />
@@ -370,6 +386,7 @@ export default function ProfileAssociation({ association, city }: DataProps) {
                               type="time"
                               name="hour"
                               placeholder="--:--"
+                              defaultValue={nowHour}
                               error={errors.hour}
                             />
                           </GridItem>
