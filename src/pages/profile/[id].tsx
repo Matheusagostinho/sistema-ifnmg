@@ -31,6 +31,7 @@ import { parseCookies } from 'nookies'
 import { useAuth } from 'hooks/useAuth'
 import { ModalLogin } from 'components/ModalLogin'
 import { database } from '../../services/firebase'
+import { RiCalendarTodoLine } from 'react-icons/ri'
 
 type Association = {
   id: string
@@ -112,7 +113,7 @@ export default function ProfileAssociation({ association, city }: DataProps) {
     event
   ) => {
     event.preventDefault()
-
+    const dateformated = new Date(values.date)
     const data = {
       ...user,
       id: user._id,
@@ -124,7 +125,7 @@ export default function ProfileAssociation({ association, city }: DataProps) {
       number: values.number,
       city: values.city,
       uf: values.uf,
-      date: values.date,
+      date: dateformated,
       hour: values.hour,
       donate: values.donate,
       id_association: association.id
@@ -142,7 +143,6 @@ export default function ProfileAssociation({ association, city }: DataProps) {
         })
         setFormDonate(false)
         setUser(res.data.user)
-        console.log(res)
 
         await database
           .ref(`associations/${association.id}/donates`)
@@ -353,22 +353,24 @@ export default function ProfileAssociation({ association, city }: DataProps) {
                       mt={['2', '0']}
                     >
                       <h3>Data de Retirada</h3>
-                      <Box display="flex">
+                      <Box display="flex" w="100%">
                         <Grid templateColumns="repeat(4, 1fr)" gap={2}>
                           <GridItem colSpan={2} h="10">
                             <Input
+                              w="100%"
                               type="date"
-                              placeholder="Cidade"
+                              placeholder="dd/mm/aaaa"
                               error={errors.date}
                               {...register('date')}
                             />
                           </GridItem>
                           <GridItem colSpan={2} h="10">
                             <Input
+                              w="100%"
                               type="time"
-                              placeholder="UF"
+                              name="hour"
+                              placeholder="--:--"
                               error={errors.hour}
-                              {...register('hour')}
                             />
                           </GridItem>
                         </Grid>
