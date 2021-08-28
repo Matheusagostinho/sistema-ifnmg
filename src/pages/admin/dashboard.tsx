@@ -72,9 +72,8 @@ export default function Dashboard({ id, numberOfFamily }) {
     }
   )
   const makeAsWithdrawn = async (id_donate: string) => {
-    console.log(id_donate)
+    onClose()
     const data = await donateModify.mutateAsync(id_donate)
-    console.log(data)
     refetch()
   }
 
