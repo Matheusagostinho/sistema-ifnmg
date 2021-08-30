@@ -97,7 +97,9 @@ export function ModalDonate({
                 fontWeight="bold"
                 pb="1"
               >
-                O que será doado?
+                {infoDonate.withdrawn
+                  ? 'O que foi doado?'
+                  : 'O que será doado?'}
               </Text>
               <Text m="2" fontSize="lg" display="flex">
                 {infoDonate?.donate}
@@ -116,19 +118,21 @@ export function ModalDonate({
           >
             Fechar
           </Button>
-          <Button
-            as="a"
-            size="md"
-            fontSize="md"
-            colorScheme="green"
-            mr="1"
-            type="button"
-            onClick={() => makeAsWithdrawn(infoDonate._id)}
-            cursor="pointer"
-            leftIcon={<Icon as={RiCheckboxCircleLine} fontSize="16" />}
-          >
-            Retirado
-          </Button>
+          {!infoDonate.withdrawn && (
+            <Button
+              as="a"
+              size="md"
+              fontSize="md"
+              colorScheme="green"
+              mr="1"
+              type="button"
+              onClick={() => makeAsWithdrawn(infoDonate._id)}
+              cursor="pointer"
+              leftIcon={<Icon as={RiCheckboxCircleLine} fontSize="16" />}
+            >
+              Retirado
+            </Button>
+          )}
         </ModalFooter>
       </ModalContent>
     </Modal>

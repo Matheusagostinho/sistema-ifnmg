@@ -81,7 +81,10 @@ export function Header({ children }: HeaderProps) {
                 borderRadius="6px"
               />
               <MenuList zIndex="tooltip">
-                <MenuItem icon={<FaRegAddressCard />}>
+                <MenuItem
+                  icon={<FaRegAddressCard />}
+                  onClick={() => router.push('/sobre')}
+                >
                   Sobre a Plataforma
                 </MenuItem>
                 <MenuItem icon={<MdSwapHoriz />} onClick={toReplaceCity}>
@@ -126,7 +129,10 @@ export function Header({ children }: HeaderProps) {
               />
               <MenuList zIndex="tooltip">
                 {/* <MenuItem icon={<RiUserLine />}>Perfil</MenuItem> */}
-                <MenuItem icon={<FaRegAddressCard />}>
+                <MenuItem
+                  icon={<FaRegAddressCard />}
+                  onClick={() => router.push('/sobre')}
+                >
                   Sobre a Plataforma
                 </MenuItem>
                 <MenuItem icon={<MdSwapHoriz />} onClick={toReplaceCity}>
