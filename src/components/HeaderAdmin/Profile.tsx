@@ -7,14 +7,14 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Text,
-  useDisclosure
+  Text
 } from '@chakra-ui/react'
 import {
   RiArrowDownSLine,
   RiLogoutCircleLine,
   RiUserLine
 } from 'react-icons/ri'
+import { useRouter } from 'next/router'
 import { signOut } from 'next-auth/client'
 import { useAssociation } from 'hooks/useAssoctiation'
 interface ProfileProps {
@@ -23,7 +23,8 @@ interface ProfileProps {
 
 export function Profile({ showProfileDate = true }: ProfileProps) {
   const { association } = useAssociation()
-  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const router = useRouter()
   return (
     <Flex align="center">
       {showProfileDate && (
@@ -52,7 +53,12 @@ export function Profile({ showProfileDate = true }: ProfileProps) {
           ml="2"
         />
         <MenuList zIndex="tooltip">
-          <MenuItem icon={<RiUserLine />}>Perfil</MenuItem>
+          <MenuItem
+            icon={<RiUserLine />}
+            onClick={() => router.push('/admin/sobre')}
+          >
+            Perfil
+          </MenuItem>
           <MenuItem icon={<RiLogoutCircleLine />} onClick={() => signOut()}>
             Sair
           </MenuItem>

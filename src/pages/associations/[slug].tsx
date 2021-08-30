@@ -1,6 +1,7 @@
 import {
   Box,
   Heading,
+  Icon,
   Image,
   Text,
   useBreakpointValue,
@@ -9,9 +10,13 @@ import {
   WrapItem
 } from '@chakra-ui/react'
 import Cards from 'components/Cards'
+import { Button } from 'components/Form/Button'
 import { InicialModal } from 'components/InicialModal'
 import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
+import { destroyCookie } from 'nookies'
 import { useEffect } from 'react'
+import { MdSwapHoriz } from 'react-icons/md'
 import { api } from 'services/api'
 import { Header } from '../../components/Header'
 type Association = {
@@ -35,8 +40,15 @@ export default function Associations({ associations, nameCity }: dataProps) {
     base: false,
     lg: true
   })
+  const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  function toReplaceCity() {
+    destroyCookie(undefined, 'ajudaai.cityId', { path: '/' })
+    destroyCookie(undefined, 'ajudaai.citySlug', { path: '/' })
+    destroyCookie(undefined, 'ajudaai.cityName', { path: '/' })
+    router.push('/')
+  }
   useEffect(() => {
     onOpen()
   }, [])
@@ -50,7 +62,7 @@ export default function Associations({ associations, nameCity }: dataProps) {
           justifyContent="center"
           textAlign="center"
         >
-          {isWideVersion && (
+          {isWideVersion && associations.length > 0 && (
             <Box w="100%">
               <Text display="flex">
                 Em {nameCity} mais de
@@ -103,10 +115,18 @@ export default function Associations({ associations, nameCity }: dataProps) {
             <Text display="block" mt="2" color="gray.400" textAlign="center">
               Ainda não tem associações cadastradas em sua cidade!
             </Text>
+            <Button
+              mt="2"
+              onClick={toReplaceCity}
+              leftIcon={<Icon as={MdSwapHoriz} fontSize="20" />}
+              size="md"
+            >
+              Trocar de Cidade
+            </Button>
           </Box>
         )}
       </Box>
-      {!isWideVersion && (
+      {!isWideVersion && associations.length > 0 && (
         <InicialModal isOpen={isOpen} onClose={onClose}>
           <Box
             h="100%"

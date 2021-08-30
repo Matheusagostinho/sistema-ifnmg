@@ -203,7 +203,7 @@ export default function ProfileAssociation({ association, city }: DataProps) {
                 </Text>
                 auxiliam mais de
                 <Text color="red.500" fontWeight="bold" mx="1">
-                  {association.people_assisted} pessoas
+                  {association.people_assisted} famílias
                 </Text>
                 em sua cidade!
               </Text>

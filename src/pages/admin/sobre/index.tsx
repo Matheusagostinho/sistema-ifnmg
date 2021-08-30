@@ -286,7 +286,7 @@ export default function CreateUser() {
                 <GridItem colSpan={3} h="10">
                   <Input
                     type="number"
-                    label="Número de pessoas assistidas"
+                    label="Famílias assistidas"
                     isBgWhite
                     error={errors.people_assisted}
                     {...register('people_assisted')}
@@ -413,7 +413,7 @@ export default function CreateUser() {
           </VStack>
         </SlideFade>
         <Flex mt="8" justify="flex-end">
-          <HStack spacing="4">
+          <HStack spacing="4" mt="8">
             <Button
               as="a"
               colorScheme="blackAlpha"

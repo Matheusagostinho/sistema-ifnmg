@@ -31,12 +31,12 @@ export function SideBarNav() {
         <NavLink icon={FaRegAddressCard} href="/admin/sobre">
           Sobre
         </NavLink>
-        <NavLink icon={AiFillProject} href="/admin/projetos">
+        {/* <NavLink icon={AiFillProject} href="/admin/projetos">
           Projetos
         </NavLink>
         <NavLink icon={AiFillSetting} href="/admin/configuracoes">
           Configurações
-        </NavLink>
+        </NavLink> */}
       </NavSection>
     </Stack>
   )

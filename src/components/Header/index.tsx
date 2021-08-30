@@ -38,7 +38,7 @@ interface HeaderProps {
 
 export function Header({ children }: HeaderProps) {
   const router = useRouter()
-  const { user, signOut } = useAuth()
+  const { user, signOut, signInWithGoogle } = useAuth()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -50,7 +50,10 @@ export function Header({ children }: HeaderProps) {
     destroyCookie(undefined, 'ajudaai.cityName', { path: '/' })
     router.push('/')
   }
-
+  const handleSignInGoogle = async () => {
+    await signInWithGoogle()
+    onClose()
+  }
   return (
     <header className={styles.header}>
       <Link href="/">
@@ -90,7 +93,12 @@ export function Header({ children }: HeaderProps) {
         )}
 
         {!user ? (
-          <Button onClick={onOpen} colorScheme="red" size="sm" variant="solid">
+          <Button
+            onClick={handleSignInGoogle}
+            colorScheme="red"
+            size="sm"
+            variant="solid"
+          >
             Login
           </Button>
         ) : (
@@ -117,7 +125,7 @@ export function Header({ children }: HeaderProps) {
                 borderRadius="6px"
               />
               <MenuList zIndex="tooltip">
-                <MenuItem icon={<RiUserLine />}>Perfil</MenuItem>
+                {/* <MenuItem icon={<RiUserLine />}>Perfil</MenuItem> */}
                 <MenuItem icon={<FaRegAddressCard />}>
                   Sobre a Plataforma
                 </MenuItem>

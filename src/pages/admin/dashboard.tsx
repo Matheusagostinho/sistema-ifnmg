@@ -19,7 +19,8 @@ import {
   Tbody,
   IconButton,
   Avatar,
-  useDisclosure
+  useDisclosure,
+  useToast
 } from '@chakra-ui/react'
 import { Header } from '../../components/HeaderAdmin'
 import { Sidebar } from '../../components/Sidebar'
@@ -49,6 +50,7 @@ type FirebaseDonations = Record<
 
 export default function Dashboard({ id, numberOfFamily }) {
   const [page, setPage] = useState(1)
+  const toast = useToast()
   const [donateInformation, setDonateInformation] = useState<Donate>(
     {} as Donate
   )
@@ -74,6 +76,12 @@ export default function Dashboard({ id, numberOfFamily }) {
   const makeAsWithdrawn = async (id_donate: string) => {
     onClose()
     const data = await donateModify.mutateAsync(id_donate)
+    toast({
+      title: 'O Agendamento foi marcado como retirado!',
+      status: 'success',
+      isClosable: true,
+      position: 'top-right'
+    })
     refetch()
   }
 
@@ -393,6 +401,7 @@ export default function Dashboard({ id, numberOfFamily }) {
                     <Thead>
                       <Tr>
                         <Th>Doadores</Th>
+                        {isWideVersion && <Th>Doações</Th>}
                         <Th>Data da doação</Th>
                       </Tr>
                     </Thead>
@@ -402,14 +411,18 @@ export default function Dashboard({ id, numberOfFamily }) {
                           <Tr key={donate?._id}>
                             <Td>
                               <Box>
-                                <ChakraLink color="red.500">
+                                <ChakraLink
+                                  color="gray.700"
+                                  onClick={() => openModalDonate(donate)}
+                                >
                                   <Text fontWeight="bold">{donate?.name}</Text>
                                 </ChakraLink>
                                 <Text fontSize="sm" color="gray.400">
-                                  {donate?.email}
+                                  {donate?.address.street}...
                                 </Text>
                               </Box>
                             </Td>
+                            {isWideVersion && <Td>{donate?.donate}</Td>}
                             <Td>{donate?.date}</Td>
                           </Tr>
                         )
