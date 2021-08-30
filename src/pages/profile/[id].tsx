@@ -85,7 +85,7 @@ const DonorFormSchema = yup.object().shape({
 
 export default function ProfileAssociation({ association, city }: DataProps) {
   const [formDonate, setFormDonate] = useState(false)
-  const { user, setUser } = useAuth()
+  const { user, setUser, signInWithGoogle } = useAuth()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -97,6 +97,23 @@ export default function ProfileAssociation({ association, city }: DataProps) {
   const { errors } = formState
   const watchAllFields = watch()
   const toast = useToast()
+
+  const day = new Date().toLocaleDateString('pt-BR', {
+    day: '2-digit'
+  })
+  const month = new Date().toLocaleDateString('pt-BR', {
+    month: '2-digit'
+  })
+  const year = new Date().toLocaleDateString('pt-BR', {
+    year: 'numeric'
+  })
+  const nowDate = [year, month, day].join('-')
+  let nowHour = new Date().toLocaleDateString('pt-BR', {
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+  nowHour = nowHour.slice(11, 16)
+
   useEffect(() => {
     reset({
       name: user?.name,
@@ -105,7 +122,9 @@ export default function ProfileAssociation({ association, city }: DataProps) {
       district: user?.address.district,
       number: user?.address.number,
       city: user?.address.number || city.name,
-      uf: user?.address.number || 'MG'
+      uf: user?.address.number || 'MG',
+      date: nowDate,
+      hour: nowHour
     })
   }, [user])
 
@@ -169,22 +188,6 @@ export default function ProfileAssociation({ association, city }: DataProps) {
     }
   }
 
-  const day = new Date().toLocaleDateString('pt-BR', {
-    day: '2-digit'
-  })
-  const month = new Date().toLocaleDateString('pt-BR', {
-    month: '2-digit'
-  })
-  const year = new Date().toLocaleDateString('pt-BR', {
-    year: 'numeric'
-  })
-  const nowDate = [year, month, day].join('-')
-  let nowHour = new Date().toLocaleDateString('pt-BR', {
-    hour: '2-digit',
-    minute: '2-digit'
-  })
-  nowHour = nowHour.slice(11, 16)
-
   return (
     <>
       <Header>
@@ -199,11 +202,11 @@ export default function ProfileAssociation({ association, city }: DataProps) {
             <Box w="100%">
               <Text display="flex">
                 <Text mr="1" fontWeight="bold">
-                  {association.name}
+                  {association?.name}
                 </Text>
                 auxiliam mais de
                 <Text color="red.500" fontWeight="bold" mx="1">
-                  {association.people_assisted} famílias
+                  {association?.people_assisted} famílias
                 </Text>
                 em sua cidade!
               </Text>
@@ -215,19 +218,19 @@ export default function ProfileAssociation({ association, city }: DataProps) {
         <main>
           <div className={styles.aside}>
             <Image
-              src={association.urlImage}
-              alt={association.name}
+              src={association?.urlImage}
+              alt={association?.name}
               borderRadius="full"
               h="160px"
               w="160px"
             />
-            <h2> {association.name}</h2>
-            <span>Desde {association.since}</span>
+            <h2> {association?.name}</h2>
+            <span>Desde {association?.since}</span>
             <h3>Telefone:</h3>
-            <p>{association.phone}</p>
+            <p>{association?.phone}</p>
             <h3>Endereço:</h3>
             <Text as="p" display="block">
-              {association.address}
+              {association?.address}
             </Text>
           </div>
           <div className={styles.content}>
@@ -238,31 +241,31 @@ export default function ProfileAssociation({ association, city }: DataProps) {
             >
               <h2>Sobre:</h2>
               <div>
-                <p>{association.about}</p>
+                <p>{association?.about}</p>
               </div>
               <h2>Projetos sociais:</h2>
               {/* <h2>Campanhas:</h2> */}
-              {(association.facebook || association.instagram) && (
+              {(association?.facebook || association?.instagram) && (
                 <>
                   <h2>Conheça mais sobre nós:</h2>
                   <Box mt="4">
-                    {association.facebook && (
+                    {association?.facebook && (
                       <ButtonChakra
                         leftIcon={<FaFacebook />}
                         colorScheme="facebook"
                       >
-                        <LinkOverlay href={association.facebook} isExternal>
+                        <LinkOverlay href={association?.facebook} isExternal>
                           Facebook
                         </LinkOverlay>
                       </ButtonChakra>
                     )}
-                    {association.instagram && (
+                    {association?.instagram && (
                       <ButtonChakra
                         leftIcon={<FaInstagram />}
                         colorScheme="pink"
                         ml="2"
                       >
-                        <LinkOverlay href={association.instagram} isExternal>
+                        <LinkOverlay href={association?.instagram} isExternal>
                           Instagram
                         </LinkOverlay>
                       </ButtonChakra>
@@ -470,11 +473,11 @@ export default function ProfileAssociation({ association, city }: DataProps) {
                     color="gray.500"
                   >
                     Para continuar,
-                    <Link color="red.500" ml="1" onClick={onOpen}>
+                    <Link color="red.500" ml="1" onClick={signInWithGoogle}>
                       faça Login.
                     </Link>
                   </Text>
-                  <ModalLogin isOpen={isOpen} onClose={onClose} />
+                  {/* <ModalLogin isOpen={isOpen} onClose={onClose} /> */}
                 </Box>
               )}
             </SlideFade>
