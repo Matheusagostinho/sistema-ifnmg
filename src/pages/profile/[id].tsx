@@ -243,7 +243,7 @@ export default function ProfileAssociation({ association, city }: DataProps) {
               <div>
                 <p>{association?.about}</p>
               </div>
-              <h2>Projetos sociais:</h2>
+              {/* <h2>Projetos sociais:</h2> */}
               {/* <h2>Campanhas:</h2> */}
               {(association?.facebook || association?.instagram) && (
                 <>
