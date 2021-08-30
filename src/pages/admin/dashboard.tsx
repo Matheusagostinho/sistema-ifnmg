@@ -2,7 +2,6 @@ import {
   Link as ChakraLink,
   Box,
   Button,
-  Checkbox,
   Flex,
   Heading,
   Icon,
@@ -35,6 +34,8 @@ import connectToDatabase from 'utils/database'
 import { useMutation } from 'react-query'
 import { database } from 'services/firebase'
 import { ModalDonate } from 'components/ModalDonate'
+import { ModalDashboard } from 'components/ModalDashboard'
+import { useAssociation } from 'hooks/useAssoctiation'
 
 type FirebaseDonations = Record<
   string,
@@ -205,7 +206,7 @@ export default function Dashboard({ id, numberOfFamily }) {
                 Famílias Auxiliadas
               </Text>
               <Heading size="3xl" mb="0">
-                {numberOfFamily}
+                {numberOfFamily !== '' ? numberOfFamily : 0}
               </Heading>
             </Box>
           </SimpleGrid>
@@ -446,6 +447,7 @@ export default function Dashboard({ id, numberOfFamily }) {
         onClose={onClose}
         infoDonate={donateInformation}
       />
+      {numberOfFamily === '' ? <ModalDashboard /> : ''}
     </Flex>
   )
 }

@@ -1,6 +1,5 @@
 import { createContext, ReactNode, useEffect, useState } from 'react'
-import Router from 'next/router'
-import { signIn, getSession, signOut, useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/client'
 
 import { api } from '../services/api'
 
@@ -36,6 +35,7 @@ interface AssociationContextData {
   association: AssociationProps
   updatedAssociation: (association: AssociationProps) => void
   fetchAssociation: (email: string) => void
+  setAssociation: (data: AssociationProps) => void
 }
 
 interface AssociationProviderProps {
@@ -68,7 +68,12 @@ export function AssociationProvider({ children }: AssociationProviderProps) {
 
   return (
     <AssociationContext.Provider
-      value={{ association, updatedAssociation, fetchAssociation }}
+      value={{
+        association,
+        updatedAssociation,
+        fetchAssociation,
+        setAssociation
+      }}
     >
       {children}
     </AssociationContext.Provider>
