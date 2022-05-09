@@ -5,9 +5,9 @@ import {
   FormLabel,
   GridItem,
   Icon,
-  Input as ChakraInput,
+  Textarea as ChakraTextArea,
   InputGroup,
-  InputProps as ChakraInputProps,
+  TextareaProps as ChakraTextareaProps,
   Text,
   Tooltip,
   useBreakpointValue
@@ -16,7 +16,7 @@ import InputMask from 'react-input-mask'
 
 import { FieldError } from 'react-hook-form'
 import { ReactNode } from 'react'
-interface InputProps extends ChakraInputProps {
+interface TextareaProps extends ChakraTextareaProps {
   name: string
   label?: string
   error?: FieldError
@@ -26,16 +26,16 @@ interface InputProps extends ChakraInputProps {
   colorLabel?: string
 }
 
-export function Input({
+export function Textarea({
   name,
   label,
   error = null,
   isBgWhite = false,
   mask = null,
   children,
-  colorLabel,
+  colorLabel = null,
   ...rest
-}: InputProps) {
+}: TextareaProps) {
   const isPhoneVersion = useBreakpointValue({
     base: true,
     lg: false
@@ -55,10 +55,8 @@ export function Input({
           </FormLabel>
         )}
         <InputGroup size="lg">
-          <ChakraInput
+          <ChakraTextArea
             {...rest}
-            as={InputMask}
-            mask={mask}
             name={name}
             id={name}
             focusBorderColor="purple.500"

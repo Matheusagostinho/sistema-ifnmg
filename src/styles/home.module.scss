@@ -2,46 +2,11 @@
   display: flex;
   align-items: stretch;
   height: 100vh;
+  background: var(--green-500);
   @media (max-width: 768px) {
     flex-direction: column;
   }
 
-  aside {
-    flex: 7;
-    background: var(--red-500);
-    color: var(--gray-100);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 120px 80px;
-    @media (max-width: 768px) {
-      display: none;
-    }
-    @media (min-width: 990px) {
-      img {
-        max-width: 320px;
-      }
-    }
-
-    img {
-      margin-left: auto;
-      margin-right: auto;
-      max-width: 380px;
-      margin-bottom: 2rem;
-    }
-
-    strong {
-      font: 700 2rem 'Poppins', sans-serif;
-      line-height: 2.5rem;
-    }
-
-    p {
-      font-size: 1.2rem;
-      line-height: 32px;
-      margin-top: 16px;
-      color: var(--gray-100);
-    }
-  }
   .titleSmartphone {
     margin-bottom: 2rem;
     @media (min-width: 768px) {
@@ -60,42 +25,41 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    max-width: 800px;
   }
 
   .mainContent {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 320px;
+    max-width: 390px;
     align-items: stretch;
     text-align: center;
 
     > img {
       align-self: center;
-      width: 200px;
-      margin-top: -1rem;
+      width: 300px;
+      margin-top: -6rem;
       margin-bottom: 2rem;
       @media (min-width: 768px) {
-        margin-bottom: 2rem;
+        margin-bottom: 6rem;
       }
     }
 
-    h1 {
-      font-size: 1rem;
-      font-weight: 600;
-      text-align: start;
-      margin-bottom: 10px;
-    }
-
     form {
+      h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        text-align: start;
+        margin-bottom: 2rem;
+        color: var(--white);
+      }
       button,
       input {
         width: 100%;
       }
       input:focus {
         outline: var(--red-500);
-      }
-      button {
       }
     }
 
@@ -125,51 +89,35 @@
       }
     }
   }
-  .suggestions {
-    background-color: var(--gray-50);
-    width: 100%;
-    max-width: 320px;
-    margin-top: -8px;
-    padding: 0;
-    max-height: 280px;
-    overflow-y: auto;
-    font-weight: 500;
-    display: block;
-    position: absolute;
-    border-radius: 3px;
-  }
-
-  .suggestions {
-    div {
-      position: relative;
-      list-style: none;
-      display: block;
-      z-index: 1000;
-      width: calc(100%);
-
-      height: 42px;
-      cursor: pointer;
-      background-color: var(--gray-50);
-      border-bottom: 1px var(--gray-100) solid;
-      transition: all 0.1s;
-      &:hover {
-        background-color: var(--red-500);
-        color: var(--gray-100);
+  aside {
+    flex: 9;
+    color: var(--gray-100);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 80px;
+    @media (max-width: 768px) {
+      display: none;
+    }
+    @media (min-width: 990px) {
+      img {
+        max-width: 320px;
       }
-      & button:focus {
-        background-color: var(--red-500);
-        color: var(--gray-100);
-      }
+    }
 
-      button {
-        cursor: pointer;
-        background: transparent;
-        width: 100%;
-        height: 100%;
-        font-weight: 500;
-        border: 0;
-        z-index: 100;
-      }
+    img {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 550px;
+      margin-bottom: 2rem;
+    }
+
+    p {
+      text-align: center;
+      font-size: 1.2rem;
+      line-height: 32px;
+      margin-top: 16px;
+      color: var(--gray-100);
     }
   }
 }

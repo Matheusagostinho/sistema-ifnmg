@@ -11,7 +11,15 @@ interface ButtonProps extends ChakraButtonProps {
 
 export function Button({ children, ...rest }: ButtonProps) {
   return (
-    <ChakraButton size="lg" colorScheme="red" borderRadius="8px" {...rest}>
+    <ChakraButton
+      size="lg"
+      colorScheme="purple"
+      borderRadius="8px"
+      {...rest}
+      _hover={{
+        color: 'var(--gray-100)'
+      }}
+    >
       {children}
     </ChakraButton>
   )

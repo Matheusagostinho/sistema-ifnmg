@@ -1,187 +1,134 @@
 import { Button } from '../components/Form/Button'
 import { FiLogIn } from 'react-icons/fi'
-import removeAccents from 'remove-accents'
+import { GrFormView, GrFormViewHide } from 'react-icons/gr'
 import styles from '../styles/home.module.scss'
 import Head from 'next/head'
 
-import { Icon, SlideFade } from '@chakra-ui/react'
-import { useState } from 'react'
-import { useRouter } from 'next/router'
-import { api } from 'services/api'
-import { GetServerSideProps } from 'next'
+import {
+  Icon,
+  IconButton,
+  InputRightElement,
+  SlideFade,
+  useToast
+} from '@chakra-ui/react'
+import router from 'next/router'
 import { Input } from '../components/Form/Input'
-import { setCookie, parseCookies } from 'nookies'
-type City = {
-  id: string
-  name: string
-  slug: string
+
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { InputRef } from 'components/Form/InputRef'
+import { useState } from 'react'
+type SignInFormData = {
+  email: string
+  password: string
 }
 
-type HomeProps = {
-  cities: City[]
-}
+const signInFormSchema = yup.object({
+  email: yup
+    .string()
+    .required('O E-mail é um campo obrigatório')
+    .email('E-mail Inválido'),
+  password: yup.string().required('A senha é um campo obrigatório')
+})
 
-export default function Home({ cities }: HomeProps) {
-  const [city, setCity] = useState('')
-
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isError, setIsError] = useState(null)
-  const router = useRouter()
-
-  const handleCity = async event => {
+export default function Home() {
+  const [show, setShow] = useState(false)
+  const { register, handleSubmit, formState } = useForm({
+    resolver: yupResolver(signInFormSchema)
+  })
+  const toast = useToast()
+  const { errors } = formState
+  console.log(errors)
+  const handlePasswordClick = () => setShow(!show)
+  const handleSignIn: SubmitHandler<SignInFormData> = async (values, event) => {
     event.preventDefault()
+    await new Promise(resolve => setTimeout(resolve, 2000))
 
-    if (city === '') {
-      setIsError({
-        message: 'Procure por sua cidade'
+    const email = values.email
+    const password = values.password
+    console.log(email)
+
+    if (email) {
+      toast({
+        title: `Login com Sucesso`,
+        status: 'success',
+        isClosable: true,
+        position: 'top-right'
       })
-      return
-    }
-    const [{ name, slug, id }] = cities.filter(item => {
-      if (item.name === city) return item.id
-    })
-    setCookie(undefined, 'ajudaai.cityId', id, {
-      maxAge: 60 * 60 * 24 * 2, // 2 days
-      path: '/'
-    })
-    setCookie(undefined, 'ajudaai.cityName', name, {
-      maxAge: 60 * 60 * 24 * 2, // 2 days
-      path: '/'
-    })
-    setCookie(undefined, 'ajudaai.citySlug', slug, {
-      maxAge: 60 * 60 * 24 * 2, // 2 days
-      path: '/'
-    })
-    setIsSubmitting(true)
-    await router.push(`/associations/${slug}`)
-    setIsSubmitting(false)
-  }
-  function isAreTypingNow(e) {
-    setCity(e.target.value)
-    setIsError(null)
-  }
 
-  function onChangeSetCity(name) {
-    setCity(name)
+      router.push('/students')
+    }
   }
   return (
     <>
       <Head>
-        <title>Ajuda ai</title>
+        <title>Gestor-IFNMG</title>
         <link rel="icon" href="/favicon.png" />
       </Head>
       <div id={styles.pageAuth}>
-        <aside>
-          <SlideFade in={true} offsetY="20px">
-            <img
-              src="images/illustration.png"
-              alt="Ilustração simbolizando perguntas e respostas"
-            />
-            <strong>
-              Falta pouco para você alegrar o dia de alguém :{')'}
-            </strong>
-            <p>
-              O AjudaAi é uma plataforma para conectar quem precisa de ajuda com
-              quem queira ajudar!
-            </p>
-          </SlideFade>
-        </aside>
         <main>
           <SlideFade in={true} offsetY="-20px" className={styles.mainContent}>
             <img src="/images/logo.png" alt="AjudaAi" />
-
-            <div className={styles.titleSmartphone}>
-              <strong>
-                Falta pouco para você alegrar o dia de alguém :{')'}
-              </strong>
-              <p>
-                O AjudaAi é uma plataforma para conectar quem precisa de ajuda
-                com quem queira ajudar!
-              </p>
-            </div>
-            <form onSubmit={handleCity}>
-              <Input
+            <form onSubmit={handleSubmit(handleSignIn)}>
+              <h1>Faça seu login</h1>
+              <InputRef
                 type="text"
-                placeholder="Nome da cidade"
-                name="city"
-                label="Encontre Associações em sua Cidade"
-                onChange={e => isAreTypingNow(e)}
-                value={city}
+                placeholder="E-mail"
                 mb="2"
-                error={isError}
+                error={errors.email}
+                {...register('email')}
               />
-              <div className={styles.suggestions}>
-                {cities
-                  .filter(name => {
-                    if (city == '') {
-                      return false
-                    } else if (
-                      removeAccents(name.name).toLowerCase() ===
-                      removeAccents(city.toLowerCase())
-                    )
-                      return false
-                    else if (
-                      removeAccents(name.name)
-                        .toLowerCase()
-                        .includes(removeAccents(city.toLowerCase()))
-                    ) {
-                      return name
+              <InputRef
+                type={show ? 'text' : 'password'}
+                placeholder="Senha"
+                mb="2"
+                error={errors.password}
+                {...register('password', {
+                  onChange: e => console.log(e.value)
+                })}
+              >
+                <InputRightElement width="2.5rem">
+                  <IconButton
+                    variant="link"
+                    color="purple.500"
+                    aria-label="View Password"
+                    icon={
+                      show ? (
+                        <GrFormView size="30" />
+                      ) : (
+                        <GrFormViewHide size="30" />
+                      )
                     }
-                  })
-                  .map(filteredName => (
-                    <div>
-                      <button
-                        type="button"
-                        onClick={() => onChangeSetCity(filteredName.name)}
-                      >
-                        {filteredName.name}
-                      </button>
-                    </div>
-                  ))}
-              </div>
+                    onClick={handlePasswordClick}
+                  />
+                </InputRightElement>
+              </InputRef>
+
               <Button
                 type="submit"
                 leftIcon={<Icon as={FiLogIn} />}
-                isLoading={isSubmitting}
+                isLoading={formState.isSubmitting}
               >
-                Procurar Associações
+                Login
               </Button>
             </form>
           </SlideFade>
         </main>
+        <aside>
+          <SlideFade in={true} offsetY="20px">
+            <img
+              src="images/illustration.png"
+              alt="Ilustração simbolizando professores se conectando entre si"
+            />
+
+            <p>
+              Sistema para acompanhamento de discentes beneficiários de auxilio
+              estudantil
+            </p>
+          </SlideFade>
+        </aside>
       </div>
     </>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async ctx => {
-  const cookies = parseCookies(ctx)
-  const id = cookies['ajudaai.cityId']
-  const slug = cookies['ajudaai.citySlug']
-
-  if (id) {
-    return {
-      redirect: {
-        destination: `/associations/${slug}`,
-        permanent: false
-      }
-    }
-  }
-
-  const { data } = await api.get('/cities', {
-    params: {
-      _limit: 10
-    }
-  })
-  const cities = data.map(city => ({
-    id: city._id,
-    slug: city.slug,
-    name: [city.name, city.uf].join('-')
-  }))
-  return {
-    props: {
-      cities
-    }
-    // revalidate: 60 * 60 * 5
-  }
 }

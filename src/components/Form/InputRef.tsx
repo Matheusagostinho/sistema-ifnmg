@@ -6,25 +6,43 @@ import {
   GridItem,
   Icon,
   Input as ChakraInput,
+  InputGroup,
   InputProps as ChakraInputProps,
   Text,
   Tooltip,
   useBreakpointValue
 } from '@chakra-ui/react'
-import InputMask from 'react-input-mask'
-import { forwardRef, ForwardRefRenderFunction, useState } from 'react'
+import {
+  Children,
+  forwardRef,
+  ForwardRefRenderFunction,
+  ReactNode,
+  useState
+} from 'react'
 import { FieldErrors } from 'react-hook-form'
 import { FiAlertCircle } from 'react-icons/fi'
+import ReactInputMask from 'react-input-mask'
 interface InputProps extends ChakraInputProps {
   name: string
   label?: string
   error?: FieldErrors
   isBgWhite?: boolean
   mask?: string
+  colorLabel?: string
+  children?: ReactNode
 }
 
 const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
-  { name, label, error = null, isBgWhite = false, mask = null, ...rest },
+  {
+    name,
+    label,
+    error,
+    isBgWhite = false,
+    mask = null,
+    children,
+    colorLabel,
+    ...rest
+  },
   ref
 ) => {
   const isPhoneVersion = useBreakpointValue({
@@ -36,30 +54,40 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   return (
     <>
       <FormControl isInvalid={!!error}>
-        {!!label && <FormLabel htmlFor={name}>{label}</FormLabel>}
+        {!!label && (
+          <FormLabel
+            htmlFor={name}
+            color={
+              !!colorLabel ? colorLabel : ['gray.500', 'gray500', 'gray.300']
+            }
+          >
+            {label}
+          </FormLabel>
+        )}
         <Box flexDirection="row" alignItems="center" display="flex">
-          <ChakraInput
-            ref={ref}
-            as={InputMask}
-            mask={mask}
-            name={name}
-            id={name}
-            focusBorderColor="red.500"
-            bgColor={isBgWhite ? 'gray.50' : 'gray.1'}
-            borderColor={isBgWhite ? 'gray.100' : ''}
-            borderWidth={isBgWhite ? '1px' : '0px'}
-            variant="filled"
-            _hover={{
-              bgColor: 'gray.50'
-            }}
-            _focus={{
-              bgColor: 'gray.1',
-              borderColor: 'red.500',
-              borderWidth: '1px'
-            }}
-            size="lg"
-            {...rest}
-          />
+          <InputGroup size="lg">
+            <ChakraInput
+              name={name}
+              id={name}
+              focusBorderColor="red.500"
+              bgColor={isBgWhite ? 'gray.50' : 'gray.1'}
+              borderColor={isBgWhite ? 'gray.100' : ''}
+              borderWidth={isBgWhite ? '1px' : '0px'}
+              variant="filled"
+              _hover={{
+                bgColor: 'gray.50'
+              }}
+              _focus={{
+                bgColor: 'gray.1',
+                borderColor: 'purple.500',
+                borderWidth: '1px'
+              }}
+              size="lg"
+              ref={ref}
+              {...rest}
+            />
+            {children}
+          </InputGroup>
 
           {!!error && (
             <Tooltip label={error.message} bg="red.400" hasArrow>

@@ -1,6 +1,7 @@
 :root {
   --text: #13131a;
   --background: #ededf2;
+  --white: #ededf2;
 
   --gray-50: #f7f9fa;
   --gray-100: #f0f0f5;
@@ -8,12 +9,21 @@
   --gray-500: #737380;
   --gray-800: #41414d;
 
-  --green-500: #04d361;
+  --green-100: #04d361;
+  --green-200: #1dd438;
+  --green-300: #2db341;
+  --green-500: #309f41;
+  --green-600: #238632;
+  --green-700: #177024;
+  --green-800: #0c5016;
 
-  --red-300: #f53b5a;
-  --red-400: #f32245;
-  --red-500: #e02041;
-  --red-800: #a81830;
+  --purple-100: #8257e5;
+  --purple-200: #6f46ce;
+  --purple-300: #6139be;
+  --purple-500: #4a21aa;
+  --purple-600: #3a1591;
+  --purple-700: #2d136b;
+  --purple-800: #261255;
 }
 
 * {
@@ -34,7 +44,7 @@ html {
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 1rem;
   background-color: var(--background);
   color: var(--text);
@@ -50,4 +60,77 @@ button {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.custom-timeline {
+  display: flex;
+  justify-content: center;
+  height: 46px;
+  width: 100%;
+  align-items: center;
+}
+.custom-timeline-line {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  position: relative;
+}
+.custom-timeline-line::before {
+  content: '';
+  display: flex;
+  position: absolute;
+  width: 3px;
+  height: 100%;
+  font-size: 18px;
+  background: var(--green-200);
+}
+
+.custom-timeline-point {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+.custom-timeline-point::before {
+  content: '';
+  display: flex;
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  top: -6px;
+  margin-left: 1px;
+  background: var(--green-200);
+}
+.timeline-end-line {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  position: relative;
+}
+.timeline-end-line::before {
+  content: '';
+  display: flex;
+  position: absolute;
+  width: 3px;
+  height: 3rem;
+  bottom: 10;
+  font-size: 18px;
+  background: var(--green-200);
+}
+.timeline-end-point {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 1rem;
+}
+.timeline-end-point::before {
+  content: '';
+  display: flex;
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  bottom: -3rem;
+  margin-left: 0px;
+  background: var(--green-200);
 }
